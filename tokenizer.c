@@ -14,8 +14,8 @@ struct Node{
 
 //Based on the first character of the string decides which Token method to send the string to
 //Returns a linked list of all tokens
-struct Node Token(char *string){
-  char c = string[0];
+struct Node Token(char c){
+  
     if((c>=65 && c<=90) || (c>=97 && c <= 122)){
       //go to Word method
     }
@@ -86,7 +86,7 @@ printf("char: %c\n", c);
 
 i++;
 }
-	
+ Token(dest[0]);	
 
 return 0;
 }
