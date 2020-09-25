@@ -3,10 +3,10 @@
 #include <ctype.h>
 #include <string.h>
 
-
+//main
 int main(int argc, char** argv){
   //yup
-  //main
+  
 
 return 0;
 }
