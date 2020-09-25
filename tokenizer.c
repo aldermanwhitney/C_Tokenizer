@@ -5,7 +5,7 @@
 
 //Defining Node for Linked List
 struct Node{
-  int booleans[5] = {0,0,0,0,0};
+ // int booleans[5] = {0,0,0,0,0}; was throwing error, commented out for now
   char *token;
   struct node *prev;
   struct Node *next;
@@ -69,42 +69,60 @@ int size_input_string = strlen(argv[1]);
 //where we will copy input string into
 char *dest = malloc(sizeof(char)*((size_input_string)+1));
 
-
 //copy string from src and put it into destination
 strcpy(dest, argv[1]);
 
-
 printf("String Copied: %s\n", dest);
 
+
+char *currentstring = malloc(sizeof(char)*(size_input_string)+1);
 
 
 int i = 0;
 
 //iterate through input string char by char until the null terminator
-while(argv[1][i]!='\0'){
-char c = argv[1][i];
-printf("char: %c\n", c);
+while(dest[i]!='\0'){
+//char c = argv[1][i];
+//printf("char: %c\n", c);
 
-char *currentstring = malloc(sizeof(char)*(i)+1);
+//each iteration, copies destination (argv[1]) into our current string, for a length of i
+strncpy(currentstring,dest,i+1);
 
-currentstring = 
+printf("Current Substring: %s\n", currentstring);
+	
+//substring(currentstring, dest, startofsubstring, lengthofsubstring);
 
-if (isWord()){
+if (isWord(currentstring)){
+puts("found word");
 }
-if (isOctal()){
+if (isOctal(currentstring)){
+puts("found octal");
 }
-if(isHex){
+if(isHex(currentstring)){
+puts("found hex");
 }
-if(isInt){
+if(isInt(currentstring)){
+puts("found int");
 }
-if(isFloat){
+if(isFloat(currentstring)){
+puts("found float");
 }
-if(isC_Operator){
+if(isC_Operator(currentstring)){
+puts("found C Operator");
 }
 
+//Token does not qualify for any cases - the largest token is the previously found token
+if ((!isWord(currentstring)) && (!isOctal(currentstring)) && (!isHex(currentstring))
+&& (!isInt(currentstring)) && (!isFloat(currentstring)) && (!isC_Operator(currentstring))){
 
 
+//This copies the previouly found token and prints it	
+//commenting out for now since we need to write our methods first
 
+//strncpy(currentstring, dest, i);
+//printf("Reached a non token, tokenizing previous token: %s", currentstring);
+//must also start current string at appropriate index from here
+}
 
 
 
