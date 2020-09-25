@@ -5,6 +5,7 @@
 
 //Defining Node for Linked List
 struct Node{
+  int booleans[5] = {0,0,0,0,0};
   char *token;
   struct node *prev;
   struct Node *next;
@@ -33,28 +34,28 @@ struct Node Token(char c){
     return *head;
 }
 
-struct Node Word(char *string){
-  return *head;
+int Node Word(char *string){
+  return 0;
 }
 
-struct Node Octal(char *string){
-  return *head;
+int Node Octal(char *string){
+  return 0;
 }
 
-struct Node Hex(char *string){
-  return *head;
+int Hex(char *string){
+  return 0;
 }
 
-struct Node Int(char *string){
-  return *head;
+int Int(char *string){
+  return 0;
 }
 
-struct Node Float(char *string){
-  return *head;
+int Float(char *string){
+  return 0;
 }
 
-struct Node C_Operator(char *string){
-  return *head;
+int C_Operator(char *string){
+  return 0;
 }
 
 
