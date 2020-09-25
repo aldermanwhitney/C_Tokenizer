@@ -34,27 +34,27 @@ struct Node Token(char c){
     return *head;
 }
 
-int Node Word(char *string){
+int isWord(char *string){
   return 0;
 }
 
-int Node Octal(char *string){
+int isOctal(char *string){
   return 0;
 }
 
-int Hex(char *string){
+int isHex(char *string){
   return 0;
 }
 
-int Int(char *string){
+int isInt(char *string){
   return 0;
 }
 
-int Float(char *string){
+int isFloat(char *string){
   return 0;
 }
 
-int C_Operator(char *string){
+int isC_Operator(char *string){
   return 0;
 }
 
@@ -85,9 +85,32 @@ while(argv[1][i]!='\0'){
 char c = argv[1][i];
 printf("char: %c\n", c);
 
+char *currentstring = malloc(sizeof(char)*(i)+1);
+
+currentstring = 
+
+if (isWord()){
+}
+if (isOctal()){
+}
+if(isHex){
+}
+if(isInt){
+}
+if(isFloat){
+}
+if(isC_Operator){
+}
+
+
+
+
+
+
+
 i++;
 }
- Token(dest[0]);	
+// Token(dest[0]);	
 
 return 0;
 }
