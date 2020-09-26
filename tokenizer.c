@@ -12,28 +12,6 @@ struct Node{
 };
   struct Node* head;
 
-
-//Based on the first character of the string decides which Token method to send the string to
-//Returns a linked list of all tokens
-struct Node Token(char c){
-  
-    if((c>=65 && c<=90) || (c>=97 && c <= 122)){
-      //go to Word method
-    }
-
-    else if(c==48){
-      //go to Octal, Hex, Int and Float methods
-    }
-    else if(c>=49 && c<=57){
-      //go to Integer and Float method 
-    }
-    else{
-      //go to C operator method
-    }
-
-    return *head;
-}
-
 int isWord(char *string){
   int i = 1;
   //checks if first character is an alphabet
@@ -52,6 +30,31 @@ int isWord(char *string){
   return 1;
 }
 
+int isHex(char *string){
+  //if first character is not zero then return false                                                                                                                                     
+  if((string[0]-'0')!= 0){
+    return 0;
+  }
+  int c = string[1];
+  //if second character is not 'x' then return false                                                                                                                                     
+  if(c!=88 && c!=120){
+    return 0;
+  }
+  //check if following characters are alphanumeric                                                                                                                                       
+  int i = 2;
+  while(string[i]!='\0'){
+     //if its not an alphabet from a-f & A-F then check its a digit, if not then return false                                                                                            
+    if(string[i]<65 || (string[i]>70 && string[i]<97) || string[i]>102){
+      if(isdigit(string[i])==0){
+      printf("end of hex");
+      return 0;
+      }
+    }
+    i++;
+  }
+  return 1;
+}
+
 int isOctal(char *string){
   int i = 1;
 
@@ -61,7 +64,13 @@ int isOctal(char *string){
 
 while (string[i]!='\0'){
 
-//converts char to int                                                                                                                                                
+  //checking for delimitters spc, tab, newline, vertical tab, form feed and carriage return                                                          
+  /* if((string[i]==32) || (string[i]==9) || (string[i]==10) || (string[i]==11) || (string[i]==12) || (string[i]==13))
+      { 
+	return 0;
+      }
+  */
+//converts char to int                                                      
   int c = string[i]-'0';
 //reached a character not between 0 and 7
   if (c<0 || c>7){
@@ -72,55 +81,45 @@ while (string[i]!='\0'){
  return 1;
 }
 
-int isHex(char *string){
-  //if first character is not zero then return false
-  if((string[0]-'0')!= 0){
-    return 0;
-  }
-  int c = string[1];
-  //if second character is not 'x' then return false
-  if(c!=88 && c!=120){
-    return 0;
-  }
-  //check if following characters are alphanumeric
-  int i = 2;
-  while(string[i]!='\0'){
-    if(string[i]<65 || (string[i]>70 && string[i]<97) || string[i]>102){
-      if(isdigit(string[i])==0){
-      printf("end of hex");
-      return 0;
-      }
+
+int isFloat(char *string){
+int i = 0;
+ int t = 1;
+while (string[i]!='\0'){
+  //converts char to int
+  int c = string[i]-'0';
+  //reached a non int                                                                                                                   
+  if (c<0 || c>9){
+    if(i>0 && string[i]==46 && t==1){
+      t=0;
+      
     }
-    i++;
+    else {
+      return 0;
+    }
   }
-  
-  //copying string from index 2 into another string hex 
+  i++;
+}
 
-  /* int length= strlen(string) - 2;
-  char *hex = malloc(sizeof(char)*length);
-  for(int i = 2, j = 0; i < strlen(string) && j < length; i++, j++){
-      hex[j] = string[i];
-  }
-
-  if(!isWord(hex)
-  */
   return 1;
 }
 
-//Function iterates through string to determine 
-//whether it is an int
-//Returns 0 for false or 1 for true
+
+//Function iterates through string to determine                                                                                                                                          
+//whether it is an int                                                                                                                                                                   
+//Returns 0 for false or 1 for true                                                                                                                                                      
 int isInt(char *string){
 int i = 0;
-
+ if(isOctal(string)){
+   return 1;
+ }
 while (string[i]!='\0'){
-
-//converts char to int
+//converts char to int                                                                                                                                                                   
 int c = string[i]-'0';
 
-//reached a non int
+//reached a non int                                                                                                                                                                      
 if (c<0 || c>9){
-return 0;
+  return 0;
 }
 i++;
 }
@@ -128,14 +127,10 @@ i++;
 return 1;
 }
 
-int isFloat(char *string){
-  return 0;
-}
 
 int isC_Operator(char *string){
   return 0;
 }
-
 
 
 int main(int argc, char** argv){
@@ -155,7 +150,7 @@ int i = 0;
 int j = 0;
 //iterate through input string char by char until the null terminator
 while(argv[1][i]!='\0'){
-
+ 
 char *currentstring = malloc(sizeof(char)*(size_input_string)+1); 
 
 //each iteration, copies destination (argv[1]) into our current string, for a length of j+1
@@ -174,21 +169,21 @@ if (isWord(currentstring)){
 puts("found word");
 word = 1;
 }
-if (isOctal(currentstring)){
-puts("found octal");
-octal = 1;
-}
 if(isHex(currentstring)){
 puts("found hex");
 hex = 1;
 }
-if(isInt(currentstring)){
-puts("found int");
-integer = 1;
+if (isOctal(currentstring)){
+puts("found octal");
+octal = 1;
 }
 if(isFloat(currentstring)){
 puts("found float");
 floatp = 1;
+}
+if(isInt(currentstring)){
+puts("found int");
+integer = 1;
 }
 if(isC_Operator(currentstring)){
 puts("found C Operator");
