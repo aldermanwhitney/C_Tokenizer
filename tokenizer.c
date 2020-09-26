@@ -154,9 +154,10 @@ while(argv[1][i]!='\0'){
 char *currentstring = malloc(sizeof(char)*(size_input_string)+1); 
 
 //each iteration, copies destination (argv[1]) into our current string, for a length of j+1
+//j will increment past a token when it is found
 strncpy(currentstring,dest,j+1);
 printf("Current Substring: %s\n", currentstring);
-	
+//printf("length of j+1: %i\n", (j+1));
 //initialize boolean values to false
 int word = 0;
 int octal = 0;
@@ -191,19 +192,30 @@ coperator = 1;
 }
 
 //Token does not qualify for any cases - the largest token is the previously found token
-if ((!word) && (!octal) && (!hex) && (!integer) && (!floatp) && (!coperator)){
-	
+//OR we have reached the char just before the null terminator
+if (((!word) && (!octal) && (!hex) && (!integer) && (!floatp) && (!coperator)) || (argv[1][i+1]=='\0')){
+
+
+if((argv[1][i+1]=='\0')){	
+//puts("reached end of string");
+strncpy(currentstring,dest,j+2);  
+char *token = malloc(sizeof(char)*(size_input_string)+1);
+strncpy(token, currentstring, j+3);
+printf("Reached the end of the string:, tokenizing the rest of the token: %s\n", token);
+return 0;
+}
 
 //This copies the previouly found token and prints it	
 //will obviously return this for any methods not yet written
 // but it does work for test case: ./a.out 323t
 // and test case ./a.out 323t456
 char *token = malloc(sizeof(char)*(size_input_string)+1);  
-strncpy(token, currentstring, i);
+strncpy(token, currentstring, j);
 printf("Reached a non token, tokenizing previous token: %s\n", token);
-
+//printf("token length, i: %i\n", i);
 //resets substring pointer to first char after token
 int token_size = strlen(token);
+//printf("token_size: %i\n", token_size);     
 dest+=token_size;
 j=-1;
 
