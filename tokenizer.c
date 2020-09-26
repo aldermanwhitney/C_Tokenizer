@@ -5,7 +5,7 @@
 
 //Defining Node for Linked List
 struct Node{
- // int booleans[5] = {0,0,0,0,0}; was throwing error, commented out for now
+  //  int *truth_values = malloc( (sizeof(int)) * 5);
   char *token;
   struct node *prev;
   struct Node *next;
@@ -35,7 +35,17 @@ struct Node Token(char c){
 }
 
 int isWord(char *string){
-  return 0;
+  int i = 1;
+  if(isalpha(string[0])==0){
+    return 0;
+  }
+  while(string[i]!='\0'){
+    if(isalpha(string[i])==0 && isdigit(string[i])==0){
+      printf("end of word");
+      return 0;
+    }
+  }
+  return 1;
 }
 
 int isOctal(char *string){
