@@ -44,6 +44,7 @@ int isWord(char *string){
       printf("end of word");
       return 0;
     }
+    i++;
   }
   return 1;
 }
