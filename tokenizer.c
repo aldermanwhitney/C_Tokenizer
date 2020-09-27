@@ -139,8 +139,148 @@ return 1;
 
 
 int isC_Operator(char *string){
+<<<<<<< HEAD
+
+char *c_op = "";
+
+int i = 0;	
+//char c = string[0];
+
+printf("ignore: %s\n", c_op);
+//printf("%c\n", c);
+
+
+//if the string is length one, choose from possible operators
+if (strlen(string)==1){
+switch(string[i]) {
+	case '(':
+		//puts("found left parenthesis");
+		c_op = "left parenthesis";	
+		return 1;
+        case ')':
+	      	//puts("found right parenthesis");
+		c_op = "right parenthesis";
+		return 1;
+        case '[': 
+                c_op = "left bracket"; 
+	       	return 1; 
+	case ']':
+		c_op = "right bracket";
+		return 1;	
+	case '.':
+		c_op = "structure member";
+		return 1;
+	case ',':
+		c_op = "comma";
+		return 1;
+	case '!':
+		c_op = "negate";
+		return 1;
+	case '~':
+		c_op="1s complement";
+		return 1;
+	case '^':
+		c_op = "bitwise XOR";
+		return 1;
+	case '|':
+      		c_op = "bitwise OR";
+	      	return 1;
+	case '+':
+		c_op = "addition";
+	      	return 1;
+	case '/':
+	     	 c_op = "division";
+	     	 return 1;
+	case '?':
+	      	c_op = "conditional true";
+	      	return 1;
+	case ':':                	
+		 c_op = "conditional false";
+		 return 1;	
+	case '<':
+       		c_op = "less than test";
+		return 1;
+	case '>':
+		c_op = "greater than test";
+		return 1;	
+	case '=':
+	  	c_op = "assignment";
+		return 1;
+	case '&':
+		c_op = "AND/address operator";
+		return 1;
+	case '-':
+		c_op = "minus/subtract operator";
+		return 1;
+	case '*':
+		c_op = "multiply/dereference operator";
+		return 1;	
+	default:
+		return 0;
+	}
+}
+
+if (strlen(string)==2){
+
+
+}
+/*
+
+operator		name
+		->				structure pointer
+		sizeof		sizeof
+		,				comma
+
+		!				negate
+			1s complement
+		>>			shift right
+		<<			shift left
+		^				bitwise XOR
+		|				bitwise OR
+
+		++			increment
+		--				decrement
+		+				addition
+		/				division
+
+		||				logical OR
+		&&			logical AND
+		?				conditional true
+		:				conditional false
+
+		==			equality test
+		!= 			inequality test
+		<				less than test
+		>				greater than test
+		<=			less than or equal test
+		>=			greater than or equal test
+
+		=				assignment
+		+=			plus equals
+		-=				minus equals
+		*=			times equals
+		/=				divide equals
+		%=			mod equals
+		>>=			shift right equals
+		<<=			shift left equals
+		&=			bitwise AND equals
+		^=			bitwise XOR equals
+		|=				bitwise OR equals
+
+		&				AND/address operator
+		-				minus/subtract operator
+		*				multiply/dereference operator
+
+
+
+*/
+
+
+	return 0;
+=======
   
   return 0;
+>>>>>>> 925e902c7013935c2ab9d3d093f17ed371480b8e
 }
 
 
