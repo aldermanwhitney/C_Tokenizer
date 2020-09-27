@@ -139,7 +139,6 @@ return 1;
 
 
 int isC_Operator(char *string){
-<<<<<<< HEAD
 
 char *c_op = "";
 
@@ -277,10 +276,10 @@ operator		name
 
 
 	return 0;
-=======
+
   
   return 0;
->>>>>>> 925e902c7013935c2ab9d3d093f17ed371480b8e
+
 }
 
 
