@@ -21,7 +21,7 @@ int isWord(char *string){
   while(string[i]!='\0'){
     //checks if the following character are alphanumeric
     //if a non-alphanumeric character is found then loop terminates to end the token there
-    if(isalpha(string[i])==0 && isdigit(string[i])==0){
+    if(isalnum(string[i])==0){
       printf("end of word");
       return 0;
     }
@@ -44,12 +44,13 @@ int isHex(char *string){
   int i = 2;
   while(string[i]!='\0'){
      //if its not an alphabet from a-f & A-F then check its a digit, if not then return false                                                                                            
-    if(string[i]<65 || (string[i]>70 && string[i]<97) || string[i]>102){
-      if(isdigit(string[i])==0){
+    // if(string[i]<65 || (string[i]>70 && string[i]<97) || string[i]>102){
+    // if(isdigit(string[i])==0){
+    if(isxdigit(string[i])==0){
       printf("end of hex");
       return 0;
-      }
     }
+  
     i++;
   }
   return 1;
@@ -84,7 +85,16 @@ while (string[i]!='\0'){
 
 int isFloat(char *string){
 int i = 0;
- int t = 1;
+int t = 1;
+ int s = 0;
+ for(int j = 0;  j < strlen(string); j++){
+   if(string[j]=='.'){
+     s=1;
+   }
+ }
+ if(s==0){
+   return 0;
+ }
 while (string[i]!='\0'){
   //converts char to int
   int c = string[i]-'0';
@@ -151,7 +161,39 @@ int i = 0;
 int j = 0;
 //iterate through input string char by char until the null terminator
 while(argv[1][i]!='\0'){
- 
+
+  /*if(argv[1][i]==' '){
+    // i++;
+  //j++;
+  continue;
+ }
+ if(argv[1][i]=='\\'){
+   if(argv[1][i+1]=='n'){
+     i+=2;
+     j+=2;
+     continue;
+   }
+   if(argv[1][i+1]=='t'){
+     i+=2;
+     j+=2;
+     continue;
+   }
+   if(argv[1][i+1]=='v'){
+     i+=2;
+     j+=2;
+     continue;
+   }
+   if(argv[1][i+1]=='f'){
+     i+=2;
+     j+=2;
+     continue;
+   }
+   if(argv[1][i+1]=='r'){
+     i+=2;
+     j+=2;
+     continue;
+   }
+   }*/
 char *currentstring = malloc(sizeof(char)*(size_input_string)+1); 
 
 //each iteration, copies destination (argv[1]) into our current string, for a length of j+1
@@ -167,6 +209,40 @@ int integer = 0;
 int floatp = 0;
 int coperator = 0;
 
+/*if(argv[1][i]==' '){
+  i++;
+  j++;
+  continue;
+ }
+ if(argv[1][i]=='\\'){
+   if(argv[1][i+1]=='n'){
+     i+=2;
+     j+=2;
+     continue;
+   }
+   if(argv[1][i+1]=='t'){
+     i+=2;
+     j+=2;
+     continue;
+   }
+   if(argv[1][i+1]=='v'){
+     i+=2;
+     j+=2;
+     continue;
+   }
+   if(argv[1][i+1]=='f'){
+     i+=2;
+     j+=2;
+     continue;
+   }
+   if(argv[1][i+1]=='r'){
+     i+=2;
+     j+=2;
+     continue;
+   }
+   
+   }*/
+ 
 if (isWord(currentstring)){
 puts("found word");
 word = 1;
@@ -222,11 +298,12 @@ j=-1;
 
 //clears current string memory
 currentstring = "";
+
 }
 
 
-j++;
-i++;
+ j++;
+ i++;
 }
 // Token(dest[0]);	
 
