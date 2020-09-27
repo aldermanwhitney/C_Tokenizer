@@ -22,7 +22,7 @@ int isWord(char *string){
     //checks if the following character are alphanumeric
     //if a non-alphanumeric character is found then loop terminates to end the token there
     if(isalnum(string[i])==0){
-      printf("end of word");
+      //printf("end of word");
       return 0;
     }
     i++;
@@ -137,15 +137,25 @@ i++;
 return 1;
 }
 
+/**This function takes a char array, 
+ * and returns a pointer to a newly malloced char array
+ *this char array will contain an empty string, if the input is not a C operator
+ or it will return a pointer to a string which describes the type of c operator it is
+ I'm going to clean this up a bit later to optimize, but it works well
+ try ./a.out test->ing
+ 
+ */
 
-int isC_Operator(char *string){
+char* isC_Operator(char *string){
 
-char *c_op = "";
+char *c_op = malloc(sizeof(char)*50);	
+	
+c_op = "";
 
 int i = 0;	
 //char c = string[0];
 
-printf("ignore: %s\n", c_op);
+//printf("ignore: %s\n", c_op);
 //printf("%c\n", c);
 
 
@@ -155,136 +165,196 @@ switch(string[i]) {
 	case '(':
 		//puts("found left parenthesis");
 		c_op = "left parenthesis";	
-		return 1;
+		return c_op;
         case ')':
 	      	//puts("found right parenthesis");
 		c_op = "right parenthesis";
-		return 1;
+		return c_op;
         case '[': 
                 c_op = "left bracket"; 
-	       	return 1; 
+		return c_op;
 	case ']':
 		c_op = "right bracket";
-		return 1;	
+		return c_op;
 	case '.':
 		c_op = "structure member";
-		return 1;
+		return c_op;
 	case ',':
 		c_op = "comma";
-		return 1;
+		return c_op;
 	case '!':
 		c_op = "negate";
-		return 1;
+		return c_op;
 	case '~':
 		c_op="1s complement";
-		return 1;
+		return c_op;
 	case '^':
 		c_op = "bitwise XOR";
-		return 1;
+		return c_op;
 	case '|':
       		c_op = "bitwise OR";
-	      	return 1;
+	      	return c_op;
 	case '+':
 		c_op = "addition";
-	      	return 1;
+	      	return c_op;
 	case '/':
 	     	 c_op = "division";
-	     	 return 1;
+	     	 return c_op;
 	case '?':
 	      	c_op = "conditional true";
-	      	return 1;
+	      	return c_op;
 	case ':':                	
 		 c_op = "conditional false";
-		 return 1;	
+		 return c_op;	
 	case '<':
        		c_op = "less than test";
-		return 1;
+		return c_op;
 	case '>':
 		c_op = "greater than test";
-		return 1;	
+		return c_op;	
 	case '=':
 	  	c_op = "assignment";
-		return 1;
+		return c_op;
 	case '&':
 		c_op = "AND/address operator";
-		return 1;
+		return c_op;
 	case '-':
 		c_op = "minus/subtract operator";
-		return 1;
+		return c_op;
 	case '*':
 		c_op = "multiply/dereference operator";
-		return 1;	
+		return c_op;	
 	default:
-		return 0;
+		return c_op;
 	}
 }
 
 if (strlen(string)==2){
+char c1 = string[0];
+char c2 = string[1];
+
+if ((c1 =='-') && (c2 == '>')){
+c_op = "structure pointer";
+return c_op;
+}
+
+if ((c1 =='>') && (c2 == '>')){
+c_op = "shift right";
+return c_op;
+}
+
+if ((c1 =='<') && (c2 == '<')){
+c_op = "shift left";
+return c_op;
+}
+if ((c1 =='+') && (c2 == '+')){
+c_op = "increment";
+return c_op;
+}
+if ((c1 =='-') && (c2 == '-')){
+c_op = "decrement";
+return c_op;
+}
+
+if ((c1 =='|') && (c2 == '|')){
+c_op = "logical OR";
+return c_op;
+}
+if ((c1 =='&') && (c2 == '&')){
+c_op = "logical AND";
+return c_op;
+}
+if ((c1 =='=') && (c2 == '=')){
+c_op = "equality test";
+return c_op;
+}
+if ((c1 =='!') && (c2 == '=')){
+c_op = "inequality test";
+return c_op;
+}
+if ((c1 =='<') && (c2 == '=')){
+c_op = "less than or equal test";
+return c_op;
+}
+if ((c1 =='>') && (c2 == '=')){
+c_op = "greater than or equal test";
+return c_op;
+}
+if ((c1 =='+') && (c2 == '=')){
+c_op = "plus equals";
+return c_op;
+}
+if ((c1 =='-') && (c2 == '=')){
+c_op = "minus equals";
+return c_op;
+}
+if ((c1 =='*') && (c2 == '=')){
+c_op = "times equals";
+return c_op;
+}
+if ((c1 =='/') && (c2 == '=')){
+c_op = "divide equals";
+return c_op;
+}
+if ((c1 =='%') && (c2 == '=')){
+c_op = "mod equals";
+return c_op;
+}
+if ((c1 =='&') && (c2 == '=')){
+c_op = "bitwise AND equals";
+return c_op;
+}
+if ((c1 =='^') && (c2 == '=')){
+c_op = "bitwise XOR equals";
+return c_op;
+}
+if ((c1 =='|') && (c2 == '=')){
+c_op = "bitwise OR equals";
+return c_op;
+}
+
+return c_op;
+}
+
+
+//Strings length 3
+if (strlen(string)==3){
+
+char c1 = string[0];
+char c2 = string[1];
+char c3 = string[2];
+	
+if ((c1 =='>') && (c2 == '>') && (c3=='=')) {
+c_op = "shift right equals";
+return c_op;
+}
+
+
+
+if ((c1 =='<') && (c2 == '<')&& (c3=='=')){
+c_op = "shift left equals";
+return c_op;
+}
+
 
 
 }
-/*
 
-operator		name
-		->				structure pointer
-		sizeof		sizeof
-		,				comma
-
-		!				negate
-			1s complement
-		>>			shift right
-		<<			shift left
-		^				bitwise XOR
-		|				bitwise OR
-
-		++			increment
-		--				decrement
-		+				addition
-		/				division
-
-		||				logical OR
-		&&			logical AND
-		?				conditional true
-		:				conditional false
-
-		==			equality test
-		!= 			inequality test
-		<				less than test
-		>				greater than test
-		<=			less than or equal test
-		>=			greater than or equal test
-
-		=				assignment
-		+=			plus equals
-		-=				minus equals
-		*=			times equals
-		/=				divide equals
-		%=			mod equals
-		>>=			shift right equals
-		<<=			shift left equals
-		&=			bitwise AND equals
-		^=			bitwise XOR equals
-		|=				bitwise OR equals
-
-		&				AND/address operator
-		-				minus/subtract operator
-		*				multiply/dereference operator
-
-
-
-*/
-
-
-	return 0;
 
   
-  return 0;
+  return c_op;
 
 }
 
 
 int main(int argc, char** argv){
 
+//checks that we have the right number of arguements
+if (argc!=2){
+return 1;
+}
+	
+	
 //gets size of input string	
 int size_input_string = strlen(argv[1]);
 
@@ -301,12 +371,25 @@ int j = 0;
 //iterate through input string char by char until the null terminator
 while(argv[1][i]!='\0'){
 
-  /*if(argv[1][i]==' '){
-    // i++;
-  //j++;
+
+//This works like its supposed to
+//we arent supposed to ignore white space
+//in the spec is says to treat as a delimiter
+//ie to mark the end of a token	
+//try a/.out "tes ting" to see - it should be two tokens
+ if((argv[1][i]==' ')){
+  i++;
+  j++;
   continue;
  }
- if(argv[1][i]=='\\'){
+ /*Honestly not sure how he even wants us to test this -
+  *it says in the spec we are not supposed to type the backslash when testing, and wont 
+  be tested on it, so typing "\n" into the commandline
+  * isnt possible, and
+  * actually hitting enter isnt possible either, maybe its a piazza question
+  *not sure about this
+
+ if(argv[1][i]=='\'){
    if(argv[1][i+1]=='n'){
      i+=2;
      j+=2;
@@ -402,8 +485,17 @@ if(isInt(currentstring)){
 puts("found int");
 integer = 1;
 }
-if(isC_Operator(currentstring)){
-puts("found C Operator");
+
+
+//Pointer that points to the string returned by isC_Operator
+char *str = isC_Operator(currentstring);
+
+//If the string returned is not empty, we have found a string operator
+//will need to increment accordingly here depening on whether its 1,2 or 3 characters
+//probably need another function to do that
+//maybe use an enum
+if(strlen(str)!=0){
+printf("found C Operator: %s\n", str);
 coperator = 1;
 }
 
@@ -416,7 +508,7 @@ if((argv[1][i+1]=='\0')){
 //puts("reached end of string");
 strncpy(currentstring,dest,j+2);  
 char *token = malloc(sizeof(char)*(size_input_string)+1);
-strncpy(token, currentstring, j+3);
+strncpy(token, currentstring, ((strlen(currentstring)+j+1)) );
 printf("Reached the end of the string:, tokenizing the rest of the token: %s\n", token);
 return 0;
 }
