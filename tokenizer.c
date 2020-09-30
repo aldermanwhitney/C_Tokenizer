@@ -11,12 +11,43 @@ struct Node{
   struct node *prev;
   struct Node *next;
 };
-  struct Node* head;
+ // struct Node* head;
 
 struct C_Operator{
 char *operator_name;
 int operator_length;
 };
+
+enum token_type{integer, word, hexadecimal, octal, floating_point, c_operator};
+
+struct Token{
+char *token_string;
+enum token_type token_type;
+struct Token *next;
+};
+struct Token* head = NULL;
+
+
+//Function takes a pointer to a struct token,
+//adds this token to the front of the linked list, 
+//and returns a pointer to the head
+struct Token* addTokentoLinkedList(struct Token* token){	
+if (head!=NULL){	
+head->next=token;
+}
+head = token;
+return head;
+}
+
+
+//Function takes a token string and token type
+//and return a pointer to a newly malloc'ed struct token 
+struct Token* createToken(char *token_string, enum token_type tt){
+struct Token *token = malloc(sizeof(struct Token));
+token->token_string = token_string;
+token->token_type = tt;
+return token;
+}
 
 
 
@@ -92,11 +123,48 @@ while (string[i]!='\0'){
 
 
 int isFloat(char *string){
+
+int decimal_count=0;
+int i = 0;
+	
+	while (string[i]!='\0'){
+		
+		char c = string[i]-'0';
+
+		//if character is not an integer or . return false
+		if((string[i]!='.') && ((c<0) || c>9)){
+		return 0;
+		}
+		//If character has a decimal, must only have one
+		//And must not be at first or last index
+		if ((string[i]=='.')&&(i!=strlen(string)-1) &&(i!=0)){
+		decimal_count++;
+		}
+
+	i++;
+	}
+
+if (decimal_count!=1){
+return 0;
+}
+return 1;
+}
+
+
+
+int isPossibleFloat(char *string){
 int i = 0;
 int t = 0;
  int s = 0;
  int e=0;
  int negative=0;
+
+ //just added this line for compilation - compiler says negative is initialized but never used
+ //and i dont see when you do anything with it other than set it to 0 or 1
+ if (negative){
+
+}
+
  // int k = (int)strlen(string);
  for(int j = 0;  j < strlen(string); j++){
    if(string[j]=='.' && j!=0){
@@ -397,65 +465,34 @@ return 1;
 	
 //gets size of input string	
 int size_input_string = strlen(argv[1]);
+printf("input string size: %i\n", size_input_string);
 
 //points to memory
 //where we will copy input string into
 char *dest = malloc(sizeof(char)*((size_input_string)+1));
 
 //copy string from argv[1] and put it into destination
-strcpy(dest, argv[1]);
+strncpy(dest, argv[1],size_input_string+1);
 printf("String Copied: %s\n", dest);
 
+
+//i is the index of the entire input string we are on
+//j is the index of the substring we are currently examining
+//j+1 is the length of the substring we are currently examining
 int i = 0;
 int j = 0;
 //iterate through input string char by char until the null terminator
 while(argv[1][i]!='\0'){
 
+//printf("i: %i\n", i);
+//printf("j: %i\n", j);
 
-//This works like its supposed to
-//we arent supposed to ignore white space
-//in the spec is says to treat as a delimiter
-//ie to mark the end of a token	
-//try a/.out "tes ting" to see - it should be two tokens
  if((argv[1][i]==' ')){
   i++;
   j++;
   continue;
  }
- /*Honestly not sure how he even wants us to test this -
-  *it says in the spec we are not supposed to type the backslash when testing, and wont 
-  be tested on it, so typing "\n" into the commandline
-  * isnt possible, and
-  * actually hitting enter isnt possible either, maybe its a piazza question
-  *not sure about this
 
- if(argv[1][i]=='\'){
-   if(argv[1][i+1]=='n'){
-     i+=2;
-     j+=2;
-     continue;
-   }
-   if(argv[1][i+1]=='t'){
-     i+=2;
-     j+=2;
-     continue;
-   }
-   if(argv[1][i+1]=='v'){
-     i+=2;
-     j+=2;
-     continue;
-   }
-   if(argv[1][i+1]=='f'){
-     i+=2;
-     j+=2;
-     continue;
-   }
-   if(argv[1][i+1]=='r'){
-     i+=2;
-     j+=2;
-     continue;
-   }
-   }*/
 char *currentstring = malloc(sizeof(char)*(size_input_string)+1); 
 
 //each iteration, copies destination (argv[1]) into our current string, for a length of j+1
@@ -463,6 +500,7 @@ char *currentstring = malloc(sizeof(char)*(size_input_string)+1);
 strncpy(currentstring,dest,j+1);
 printf("Current Substring: %s\n", currentstring);
 //printf("length of j+1: %i\n", (j+1));
+
 
 //initialize boolean values to false
 int word = 0;
@@ -473,60 +511,75 @@ int floatp = 0;
 int coperator = 0;
 
 int coperator_index_increment = 0;
-/*if(argv[1][i]==' '){
-  i++;
-  j++;
-  continue;
- }
- if(argv[1][i]=='\\'){
-   if(argv[1][i+1]=='n'){
-     i+=2;
-     j+=2;
-     continue;
-   }
-   if(argv[1][i+1]=='t'){
-     i+=2;
-     j+=2;
-     continue;
-   }
-   if(argv[1][i+1]=='v'){
-     i+=2;
-     j+=2;
-     continue;
-   }
-   if(argv[1][i+1]=='f'){
-     i+=2;
-     j+=2;
-     continue;
-   }
-   if(argv[1][i+1]=='r'){
-     i+=2;
-     j+=2;
-     continue;
-   }
-   
-   }*/
  
 coperator_index_increment = 0;
 if (isWord(currentstring)){
 puts("found word");
 word = 1;
+
+struct Token *word_token = malloc(sizeof(struct Token));
+word_token->token_string =currentstring;
+word_token->token_type = word;
+
+if (head!=NULL){
+head->next=word_token;
+}
+head = word_token;
 }
 if(isHex(currentstring)){
 puts("found hex");
 hex = 1;
+struct Token *hex_token = malloc(sizeof(struct Token));
+hex_token->token_string =currentstring;
+hex_token->token_type = hexadecimal;
+
+if (head!=NULL){
+head->next=hex_token;
+}
+head = hex_token;
 }
 if (isOctal(currentstring)){
 puts("found octal");
 octal = 1;
+struct Token *octal_token = malloc(sizeof(struct Token));
+octal_token->token_string =currentstring;
+octal_token->token_type = octal;
+
+if (head!=NULL){
+head->next=octal_token;
+}
+head = octal_token;
 }
 if(isFloat(currentstring)){
 puts("found float");
 floatp = 1;
+struct Token *float_token = createToken(currentstring, floating_point);
+head = addTokentoLinkedList(float_token);
 }
 if(isInt(currentstring)){
 puts("found int");
 integer = 1;
+struct Token *int_token = createToken(currentstring, integer);
+head = addTokentoLinkedList(int_token);
+
+/*
+struct Token *int_token = malloc(sizeof(struct Token));
+int_token->token_string =currentstring;
+int_token->token_type = integer;
+printf("integer token type:%d", int_token->token_type );
+if (head!=NULL){
+head->next=int_token;
+}
+head = int_token;
+
+*/
+
+
+//printf("head token type:%d", head->token_type );
+//if((head->token_type)==integer){
+//puts("yes, token type is an integer");
+//}
+
 }
 
 if (coperator_index_increment){
@@ -543,6 +596,18 @@ if((c_operator_struct->operator_length)!=0){
 printf("found C Operator: %s\n", (c_operator_struct->operator_name));
 coperator = 1;
 coperator_index_increment = (c_operator_struct->operator_length);
+
+
+struct Token *c_operator_token = malloc(sizeof(struct Token));
+c_operator_token->token_string =currentstring;
+c_operator_token->token_type = c_operator;
+
+if (head!=NULL){
+head->next=c_operator_token;
+}
+head = c_operator_token;
+
+
 }
 
 
@@ -561,15 +626,30 @@ if (((!word) && (!octal) && (!hex) && (!integer) && (!floatp) && (!coperator)) |
 
 
 if((argv[1][i+1]=='\0')){	
-//puts("reached end of string");
 strncpy(currentstring,dest,j+2);  
 char *token = malloc(sizeof(char)*(size_input_string)+1);
 strncpy(token, currentstring, ((strlen(currentstring)+j+1)) );
 printf("Reached the end of the string:, tokenizing the rest of the token: %s\n", token);
-
-//i+=coperator_index_increment;
 return 0;
 }
+
+if (isPossibleFloat(currentstring)){
+puts("can possibly be float - checking next index..");
+
+char *possible_float = malloc(sizeof(char)*(size_input_string+1));
+strncpy(possible_float, dest, j+2);
+printf("checking this for a float:%s\n",  possible_float);
+
+if (isFloat(possible_float)){
+puts("next token will be float, continue iterations as normal");
+i++;
+j++;
+free(possible_float);
+continue;
+}
+free(possible_float);
+}
+
 
 //This copies the previouly found token and prints it	
 //will obviously return this for any methods not yet written
@@ -578,27 +658,28 @@ return 0;
 char *token = malloc(sizeof(char)*(size_input_string)+1);  
 strncpy(token, currentstring, j);
 printf("Reached a non token, tokenizing previous token: %s\n", token);
+printf("Token Type: %d\n",head->token_type);
+printf("Token String: %s\n", head->token_string);
 //printf("token length, i: %i\n", i);
 //resets substring pointer to first char after token
 int token_size = strlen(token);
 //printf("token_size: %i\n", token_size);     
 dest+=token_size;
 j=-1;
+
+//move iteration back one, to examine next token
 i=i-1; //was missing this before
 
 //clears current string memory
-currentstring = "";
-
+//currentstring = "";
+free(currentstring);
 }
-
 
  j++;
  i++;
-
-// printf("i: %i" ,i );
-// printf("j: %i",j );
 }
-// Token(dest[0]);	
+	
 
+free(dest);
 return 0;
 }
