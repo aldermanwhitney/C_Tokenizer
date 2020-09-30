@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -85,10 +86,13 @@ while (string[i]!='\0'){
 
 int isFloat(char *string){
 int i = 0;
-int t = 1;
+int t = 0;
  int s = 0;
+ int e=0;
+ int negative=0;
+ // int k = (int)strlen(string);
  for(int j = 0;  j < strlen(string); j++){
-   if(string[j]=='.'){
+   if(string[j]=='.' && j!=0){
      s=1;
    }
  }
@@ -100,9 +104,18 @@ while (string[i]!='\0'){
   int c = string[i]-'0';
   //reached a non int                                                                                                                   
   if (c<0 || c>9){
-    if(i>0 && string[i]==46 && t==1){
-      t=0;
+    if(i>0 && string[i]==46 && t==0){
+      t=1;
       
+    }
+    else if(e==0 && t==1 && (string[i]==69 || string[i]==101)){
+      e=i;
+      // printf("found e");
+      //      continue;
+    }
+    else if(e==(i-1) && t==1 && (string[i]==45 || string[i]==43)){
+      negative=1;
+      // printf("found e negative/positive");
     }
     else {
       return 0;
@@ -430,40 +443,6 @@ int hex = 0;
 int integer = 0;
 int floatp = 0;
 int coperator = 0;
-
-/*if(argv[1][i]==' '){
-  i++;
-  j++;
-  continue;
- }
- if(argv[1][i]=='\\'){
-   if(argv[1][i+1]=='n'){
-     i+=2;
-     j+=2;
-     continue;
-   }
-   if(argv[1][i+1]=='t'){
-     i+=2;
-     j+=2;
-     continue;
-   }
-   if(argv[1][i+1]=='v'){
-     i+=2;
-     j+=2;
-     continue;
-   }
-   if(argv[1][i+1]=='f'){
-     i+=2;
-     j+=2;
-     continue;
-   }
-   if(argv[1][i+1]=='r'){
-     i+=2;
-     j+=2;
-     continue;
-   }
-   
-   }*/
  
 if (isWord(currentstring)){
 puts("found word");
