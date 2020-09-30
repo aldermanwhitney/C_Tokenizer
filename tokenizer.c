@@ -13,6 +13,13 @@ struct Node{
 };
   struct Node* head;
 
+struct C_Operator{
+char *operator_name;
+int operator_length;
+};
+
+
+
 int isWord(char *string){
   int i = 1;
   //checks if first character is an alphabet
@@ -159,11 +166,17 @@ return 1;
  
  */
 
-char* isC_Operator(char *string){
+//char* isC_Operator(char *string){
 
-char *c_op = malloc(sizeof(char)*50);	
-	
-c_op = "";
+struct C_Operator* isC_Operator(char *string){
+
+//char *c_op = malloc(sizeof(char)*50);	
+
+struct C_Operator *c_operator_struct = malloc(sizeof(struct C_Operator));
+c_operator_struct->operator_length=0;
+c_operator_struct->operator_name="";
+
+//c_op = "";
 
 int i = 0;	
 //char c = string[0];
@@ -174,179 +187,193 @@ int i = 0;
 
 //if the string is length one, choose from possible operators
 if (strlen(string)==1){
+
+c_operator_struct->operator_length=1;
 switch(string[i]) {
 	case '(':
 		//puts("found left parenthesis");
-		c_op = "left parenthesis";	
-		return c_op;
+		//c_op = "left parenthesis";	
+		//return c_op;
+		c_operator_struct->operator_name = "left parenthesis";
+		return c_operator_struct;
         case ')':
-	      	//puts("found right parenthesis");
-		c_op = "right parenthesis";
-		return c_op;
+		c_operator_struct->operator_name = "right parenthesis";
+		return c_operator_struct;
         case '[': 
-                c_op = "left bracket"; 
-		return c_op;
+		c_operator_struct->operator_name = "left bracket";
+		return c_operator_struct;
 	case ']':
-		c_op = "right bracket";
-		return c_op;
+		c_operator_struct->operator_name = "right bracket";
+		return c_operator_struct;
 	case '.':
-		c_op = "structure member";
-		return c_op;
+		c_operator_struct->operator_name = "structure member";
+		return c_operator_struct;
 	case ',':
-		c_op = "comma";
-		return c_op;
+		c_operator_struct->operator_name = "comma";
+		return c_operator_struct;
 	case '!':
-		c_op = "negate";
-		return c_op;
+		c_operator_struct->operator_name = "negate";
+		return c_operator_struct;
 	case '~':
-		c_op="1s complement";
-		return c_op;
+		c_operator_struct->operator_name = "1s complement";
+		return c_operator_struct;
 	case '^':
-		c_op = "bitwise XOR";
-		return c_op;
+		c_operator_struct->operator_name = "bitwise XOR";
+		return c_operator_struct;
 	case '|':
-      		c_op = "bitwise OR";
-	      	return c_op;
+		c_operator_struct->operator_name = "bitwise OR";
+		return c_operator_struct;
 	case '+':
-		c_op = "addition";
-	      	return c_op;
+		c_operator_struct->operator_name = "addition";
+		return c_operator_struct;
 	case '/':
-	     	 c_op = "division";
-	     	 return c_op;
+		c_operator_struct->operator_name = "division";
+		return c_operator_struct;
 	case '?':
-	      	c_op = "conditional true";
-	      	return c_op;
-	case ':':                	
-		 c_op = "conditional false";
-		 return c_op;	
+		c_operator_struct->operator_name = "conditional true";
+		return c_operator_struct;
+	case ':':   		
+		c_operator_struct->operator_name = "conditional false";
+		return c_operator_struct;
 	case '<':
-       		c_op = "less than test";
-		return c_op;
+		c_operator_struct->operator_name = "less than test";
+		return c_operator_struct;
 	case '>':
-		c_op = "greater than test";
-		return c_op;	
+		c_operator_struct->operator_name = "greater than test";
+		return c_operator_struct;
 	case '=':
-	  	c_op = "assignment";
-		return c_op;
+		c_operator_struct->operator_name = "assignment";
+		return c_operator_struct;
 	case '&':
-		c_op = "AND/address operator";
-		return c_op;
+		c_operator_struct->operator_name = "AND/address operator";
+		return c_operator_struct;
 	case '-':
-		c_op = "minus/subtract operator";
-		return c_op;
+		c_operator_struct->operator_name = "minus/subtract operator";
+		return c_operator_struct;
 	case '*':
-		c_op = "multiply/dereference operator";
-		return c_op;	
+		c_operator_struct->operator_name = "multiply/dereference operator";
+		return c_operator_struct;
 	default:
-		return c_op;
+		c_operator_struct->operator_length=0;
+		//return c_op;
+		return c_operator_struct;
 	}
+
+
 }
 
 if (strlen(string)==2){
+
+c_operator_struct->operator_length=2;
+
 char c1 = string[0];
 char c2 = string[1];
 
-if ((c1 =='-') && (c2 == '>')){
-c_op = "structure pointer";
-return c_op;
+
+if ((c1 =='-') && (c2 == '>')){	
+c_operator_struct->operator_name = "structure pointer";
+return c_operator_struct;
+//c_op = "structure pointer";
+//return c_op;
 }
 
 if ((c1 =='>') && (c2 == '>')){
-c_op = "shift right";
-return c_op;
+c_operator_struct->operator_name = "shift right";
+return c_operator_struct;
 }
 
 if ((c1 =='<') && (c2 == '<')){
-c_op = "shift left";
-return c_op;
+c_operator_struct->operator_name = "shift left";
+return c_operator_struct;
 }
 if ((c1 =='+') && (c2 == '+')){
-c_op = "increment";
-return c_op;
+c_operator_struct->operator_name = "increment";
+return c_operator_struct;
 }
 if ((c1 =='-') && (c2 == '-')){
-c_op = "decrement";
-return c_op;
+c_operator_struct->operator_name = "decrement";
+return c_operator_struct;
 }
 
 if ((c1 =='|') && (c2 == '|')){
-c_op = "logical OR";
-return c_op;
+c_operator_struct->operator_name = "logical OR";
+return c_operator_struct;
 }
 if ((c1 =='&') && (c2 == '&')){
-c_op = "logical AND";
-return c_op;
+c_operator_struct->operator_name = "logical AND";
+return c_operator_struct;
 }
 if ((c1 =='=') && (c2 == '=')){
-c_op = "equality test";
-return c_op;
+c_operator_struct->operator_name = "equality test";
+return c_operator_struct;
 }
 if ((c1 =='!') && (c2 == '=')){
-c_op = "inequality test";
-return c_op;
+c_operator_struct->operator_name = "inequality test";
+return c_operator_struct;
 }
 if ((c1 =='<') && (c2 == '=')){
-c_op = "less than or equal test";
-return c_op;
+c_operator_struct->operator_name = "less than or equal test";
+return c_operator_struct;
 }
 if ((c1 =='>') && (c2 == '=')){
-c_op = "greater than or equal test";
-return c_op;
+c_operator_struct->operator_name = "greater than or equal test";
+return c_operator_struct;
 }
 if ((c1 =='+') && (c2 == '=')){
-c_op = "plus equals";
-return c_op;
+c_operator_struct->operator_name = "plus equals";
+return c_operator_struct;
 }
 if ((c1 =='-') && (c2 == '=')){
-c_op = "minus equals";
-return c_op;
+c_operator_struct->operator_name = "minus equals";
+return c_operator_struct;
 }
 if ((c1 =='*') && (c2 == '=')){
-c_op = "times equals";
-return c_op;
+c_operator_struct->operator_name = "times equals";
+return c_operator_struct;
 }
 if ((c1 =='/') && (c2 == '=')){
-c_op = "divide equals";
-return c_op;
+c_operator_struct->operator_name = "divide equals";
+return c_operator_struct;
 }
 if ((c1 =='%') && (c2 == '=')){
-c_op = "mod equals";
-return c_op;
+c_operator_struct->operator_name = "mod equals";
+return c_operator_struct;
 }
-if ((c1 =='&') && (c2 == '=')){
-c_op = "bitwise AND equals";
-return c_op;
+if ((c1 =='&') && (c2 == '=')){	
+c_operator_struct->operator_name = "bitwise AND equals";
+return c_operator_struct;
 }
 if ((c1 =='^') && (c2 == '=')){
-c_op = "bitwise XOR equals";
-return c_op;
+c_operator_struct->operator_name = "bitwise XOR equals";
+return c_operator_struct;
 }
 if ((c1 =='|') && (c2 == '=')){
-c_op = "bitwise OR equals";
-return c_op;
+c_operator_struct->operator_name = "bitwise OR equals";
+return c_operator_struct;
 }
 
-return c_op;
+c_operator_struct->operator_length=0;
+return c_operator_struct;
 }
 
 
 //Strings length 3
 if (strlen(string)==3){
 
+c_operator_struct->operator_length=3;
+	
 char c1 = string[0];
 char c2 = string[1];
 char c3 = string[2];
 	
 if ((c1 =='>') && (c2 == '>') && (c3=='=')) {
-c_op = "shift right equals";
-return c_op;
+c_operator_struct->operator_name = "shift right equals";
+return c_operator_struct;
 }
-
-
 
 if ((c1 =='<') && (c2 == '<')&& (c3=='=')){
-c_op = "shift left equals";
-return c_op;
+c_operator_struct->operator_name = "shift left equals";
+return c_operator_struct;
 }
 
 
@@ -354,8 +381,8 @@ return c_op;
 }
 
 
-  
-  return c_op;
+  c_operator_struct->operator_length=0;
+  return c_operator_struct;
 
 }
 
@@ -436,6 +463,7 @@ char *currentstring = malloc(sizeof(char)*(size_input_string)+1);
 strncpy(currentstring,dest,j+1);
 printf("Current Substring: %s\n", currentstring);
 //printf("length of j+1: %i\n", (j+1));
+
 //initialize boolean values to false
 int word = 0;
 int octal = 0;
@@ -443,7 +471,43 @@ int hex = 0;
 int integer = 0;
 int floatp = 0;
 int coperator = 0;
+
+int coperator_index_increment = 0;
+/*if(argv[1][i]==' '){
+  i++;
+  j++;
+  continue;
+ }
+ if(argv[1][i]=='\\'){
+   if(argv[1][i+1]=='n'){
+     i+=2;
+     j+=2;
+     continue;
+   }
+   if(argv[1][i+1]=='t'){
+     i+=2;
+     j+=2;
+     continue;
+   }
+   if(argv[1][i+1]=='v'){
+     i+=2;
+     j+=2;
+     continue;
+   }
+   if(argv[1][i+1]=='f'){
+     i+=2;
+     j+=2;
+     continue;
+   }
+   if(argv[1][i+1]=='r'){
+     i+=2;
+     j+=2;
+     continue;
+   }
+   
+   }*/
  
+coperator_index_increment = 0;
 if (isWord(currentstring)){
 puts("found word");
 word = 1;
@@ -465,18 +529,31 @@ puts("found int");
 integer = 1;
 }
 
+if (coperator_index_increment){
+}
 
 //Pointer that points to the string returned by isC_Operator
-char *str = isC_Operator(currentstring);
+//char *str = isC_Operator(currentstring);
+
+//Pointer that points to C_operator struct
+struct C_Operator *c_operator_struct = isC_Operator(currentstring);
+
+//if the c operator struct contains an operator length other than zero, we have found a c operator
+if((c_operator_struct->operator_length)!=0){
+printf("found C Operator: %s\n", (c_operator_struct->operator_name));
+coperator = 1;
+coperator_index_increment = (c_operator_struct->operator_length);
+}
+
 
 //If the string returned is not empty, we have found a string operator
 //will need to increment accordingly here depening on whether its 1,2 or 3 characters
 //probably need another function to do that
 //maybe use an enum
-if(strlen(str)!=0){
-printf("found C Operator: %s\n", str);
-coperator = 1;
-}
+//if(strlen(str)!=0){
+//printf("found C Operator: %s\n", str);
+//coperator = 1;
+//}
 
 //Token does not qualify for any cases - the largest token is the previously found token
 //OR we have reached the char just before the null terminator
@@ -489,6 +566,8 @@ strncpy(currentstring,dest,j+2);
 char *token = malloc(sizeof(char)*(size_input_string)+1);
 strncpy(token, currentstring, ((strlen(currentstring)+j+1)) );
 printf("Reached the end of the string:, tokenizing the rest of the token: %s\n", token);
+
+//i+=coperator_index_increment;
 return 0;
 }
 
@@ -505,6 +584,7 @@ int token_size = strlen(token);
 //printf("token_size: %i\n", token_size);     
 dest+=token_size;
 j=-1;
+i=i-1; //was missing this before
 
 //clears current string memory
 currentstring = "";
@@ -514,6 +594,9 @@ currentstring = "";
 
  j++;
  i++;
+
+// printf("i: %i" ,i );
+// printf("j: %i",j );
 }
 // Token(dest[0]);	
 
