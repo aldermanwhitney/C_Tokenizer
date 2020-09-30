@@ -1,4 +1,5 @@
-#include <stdio.h>
+
+1;95;0c#include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
@@ -430,40 +431,6 @@ int hex = 0;
 int integer = 0;
 int floatp = 0;
 int coperator = 0;
-
-/*if(argv[1][i]==' '){
-  i++;
-  j++;
-  continue;
- }
- if(argv[1][i]=='\\'){
-   if(argv[1][i+1]=='n'){
-     i+=2;
-     j+=2;
-     continue;
-   }
-   if(argv[1][i+1]=='t'){
-     i+=2;
-     j+=2;
-     continue;
-   }
-   if(argv[1][i+1]=='v'){
-     i+=2;
-     j+=2;
-     continue;
-   }
-   if(argv[1][i+1]=='f'){
-     i+=2;
-     j+=2;
-     continue;
-   }
-   if(argv[1][i+1]=='r'){
-     i+=2;
-     j+=2;
-     continue;
-   }
-   
-   }*/
  
 if (isWord(currentstring)){
 puts("found word");
