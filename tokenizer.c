@@ -12,6 +12,13 @@ struct Node{
 };
   struct Node* head;
 
+struct C_Operator{
+char *operator_name;
+int operator_length;
+};
+
+
+
 int isWord(char *string){
   int i = 1;
   //checks if first character is an alphabet
@@ -149,7 +156,11 @@ return 1;
 char* isC_Operator(char *string){
 
 char *c_op = malloc(sizeof(char)*50);	
-	
+
+//struct C_Operator *c_operator_struct = malloc(sizeof(struct C_Operator));
+//c_operator_struct.operator_length=0;
+
+
 c_op = "";
 
 int i = 0;	
