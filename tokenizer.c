@@ -509,114 +509,30 @@ return c_op;
 }
 
 
-int checkIfNextIterationWillBeToken(char *currentstring, char *dest, int j, int size_input_string){
+/**This function returns a pointer to a newly malloc'ed char array
+ *Given a string, and the beginning and ending indexes you want a substring of
+ */
+char* createSubstring(char* string, int beginIndex, int endIndex){
 
-//Check for case 2 - float
-if (isPossibleFloat(currentstring)){
-puts("can possibly be float - checking next index..");
+int substring_size = endIndex - beginIndex + 1;	
+char *result = malloc(sizeof(char)*(substring_size)+1); 
 
-char *possible_float = malloc(sizeof(char)*(size_input_string+1));
-strncpy(possible_float, dest, j+2);
-printf("checking this for a float: %s\n",  possible_float);
-
-if (isFloat(possible_float)){
-puts("next token will be float, continue iterations as normal");
-free(possible_float);
-return 1;
-}
-else{
-puts("next value will not be a float");
-}
-free(possible_float);
-return 0;
-}
-
-//Check for case 2 - hex
-if (isPossibleHex(currentstring)){
-puts("can possibly be hex - checking next index..");
-
-char *possible_hex = malloc(sizeof(char)*(size_input_string+1));
-strncpy(possible_hex, dest, j+2);
-printf("checking this for a hex: %s\n",  possible_hex);
-
-if (isHex(possible_hex)){
-puts("next token will be hex, continue iterations as normal");
-free(possible_hex);
-return 1;
-}
-else{
-puts("next token will not be hex");
-}
-free(possible_hex);
-return 0;
-}
-
-return 0;
-}
-
-
-int main(int argc, char** argv){
-
-//checks that we have the right number of arguements
-if (argc!=2){
-  puts("Invalid number of arguments");
-  return 1;
-}
-	
-	
-//gets size of input string	
-int size_input_string = strlen(argv[1]);
-printf("input string size: %i\n", size_input_string);
-
-//points to memory
-//where we will copy input string into
-char *dest = malloc(sizeof(char)*((size_input_string)+1));
-
-//copy string from argv[1] and put it into destination
-strncpy(dest, argv[1],size_input_string+1);
-printf("String Copied: %s\n", dest);
-
-
-//i is the index of the entire input string we are on
-//j is the index of the substring we are currently examining
-//j+1 is the length of the substring we are currently examining
-int i = 0;
 int j = 0;
+for(int i = beginIndex; i<=endIndex; i++){
+result[j] = string[i];
+j++;	
+}
 
-//iterate through input string char by char until the null terminator
-while(argv[1][i]!='\0'){
-
-//printf("i: %i\n", i);
-//printf("j: %i\n", j);
-
-  if(Delimiter_present(argv[1][i])==1){
-  i++;
-  j++;
-  continue;
-  }
-
- if(argv[1][i]=='\\'){
-   printf("found back slach");
- }
-//holds current substring we are examining 
-char *currentstring = malloc(sizeof(char)*(size_input_string)+1); 
-
-//this creates the substring which we are examining
-//each iteration, copies destination (argv[1]) into our current string, for a length of j+1
-//j will increment past a token when it is found
-strncpy(currentstring,dest,j+1);
-printf("Current Substring: %s\n", currentstring);
-//printf("length of j+1: %i\n", (j+1));
+printf("Substring: %s\n", result);
+return result;
+}
 
 
-//initialize boolean values to false
-int word = 0;
-int octal = 0;
-int hex = 0;
-int integer = 0;
-int floatp = 0;
-int coperator = 0;
- 
+/**This function takes a string and checks to see what tokens it qualifies for, if any
+ *Will add these tokens to a linked list, from the head
+ */
+struct Token* add_viable_tokens_to_linkedlist(char* currentstring){
+
 //Determine what type of token the substring is
 //and create a struct token (linked list node) for it, and add to front of linked list
 //If multiple types are possible, head will point to the node that was last added
@@ -624,31 +540,26 @@ int coperator = 0;
 //Current precedence is order of if statements - word,int,float,hex,octal,c operator
 if (isWord(currentstring)){
 puts("found word");
-word = 1;
 struct Token *word_token = createToken(currentstring, Word);
 head = addTokentoLinkedList(word_token);
 }
 if(isInt(currentstring)){
 puts("found int");
-integer = 1;
 struct Token *int_token = createToken(currentstring, Integer);
 head = addTokentoLinkedList(int_token);
 }
 if(isFloat(currentstring)){
 puts("found float");
-floatp = 1;
 struct Token *float_token = createToken(currentstring, FloatingPoint);
 head = addTokentoLinkedList(float_token);
 }
 if(isHex(currentstring)){
 puts("found hex");
-hex = 1;
 struct Token *hex_token = createToken(currentstring, Hexadecimal);
 head = addTokentoLinkedList(hex_token);
 }
 if (isOctal(currentstring)){
 puts("found octal");
-octal = 1;
 struct Token *octal_token = createToken(currentstring, Octal);
 head = addTokentoLinkedList(octal_token);
 }
@@ -659,7 +570,7 @@ char *str = isC_Operator(currentstring);
 //If the string returned is not empty, we have found a string operator
 if(strlen(str)!=0){
 printf("found C Operator: %s\n", str);
-coperator = 1;
+//coperator = 1;
 
 struct Token *c_operator_token = createToken(currentstring, COperator);
 //c_operator_token->optional_c_operator_type=c_operator_struct->operator_name;
@@ -667,32 +578,14 @@ c_operator_token->optional_c_operator_type=str;
 head = addTokentoLinkedList(c_operator_token);
 }
 
-/*ignore**
-//Pointer that points to C_operator struct
-//struct C_Operator *c_operator_struct = isC_Operator(currentstring);
-
-//if the c operator struct contains an operator length other than zero, we have found a c operator
-if((c_operator_struct->operator_length)!=0){
-printf("found C Operator: %s\n", (c_operator_struct->operator_name));
-coperator = 1;
-coperator_index_increment = (c_operator_struct->operator_length);
-*/
+return head;
+}
 
 
-//Token does not qualify for any cases - 
-//One of three things may happen
-//1 - the largest token is the previously found token
-//2 - We have reached a substring that is not currently a token, but may be if given one more iteration (ie 123.)
-//3 - we have reached the char just before the null terminator
-if (((!word) && (!octal) && (!hex) && (!integer) && (!floatp) && (!coperator)) || (argv[1][i+1]=='\0')){
-
-//Case 3	
-//reached the end of the string
-if((argv[1][i+1]=='\0')){	
-strncpy(currentstring,dest,j+2);  
-char *token = malloc(sizeof(char)*(size_input_string)+1);
-strncpy(token, currentstring, ((strlen(currentstring)+j+1)) );
-printf("Reached the end of the string:, tokenizing the rest of the token: %s\n", token);
+/*This function will print the string and type
+ *of the token at the head of the linked list
+ */
+void printTokenFromLinkedListHead(){
 if ((head->optional_c_operator_type)!=NULL){
 printf("[Token Type: %s]\n", head->optional_c_operator_type);
 }
@@ -700,31 +593,74 @@ else{
 printf("[Token Type: %s]\n", getTokenTypeFromEnum(head->token_type));
 }
 printf("[Token String: %s]\n", head->token_string);
+//printf("token length, i: %i\n", i);
+}
+
+
+
+int main(int argc, char** argv){
+
+if (argc!=2){
+  puts("Invalid number of arguments");
+  return 1;
+}
+		
+//i iterates through input string char by char
+//beginIndex is the beginning of the current substring we are examing 
+//beginIndex will advance to beginIndex = i when a token is found, to examine new substring
+int i = 0;
+int beginSubstringIndex = 0;
+
+//iterate through input string char by char until the null terminator
+while(argv[1][i]!='\0'){
+
+char* currentstring = createSubstring(argv[1], beginSubstringIndex, i);
+
+  if(Delimiter_present(argv[1][i])==1){
+  i++;
+  beginSubstringIndex++;
+  continue;
+  }
+
+ if(argv[1][i]=='\\'){
+   printf("found back slash");
+ } 
+
+//save old head pointer
+ struct Token* oldhead = head;
+
+//Searches for any possible tokens for current substring
+//and adds these tokens to a linked list and updates head
+head = add_viable_tokens_to_linkedlist(currentstring);
+
+//reached the end of the string
+if(argv[1][i+1]=='\0'){	  
+puts("reached the end of the string, tokenizing rest of the token");
+printTokenFromLinkedListHead();
 return 0;
 }
 
-//Case 2
-//May be token in next iteration
-if(checkIfNextIterationWillBeToken(currentstring, dest, j, size_input_string)){
-i++;
-j++;
-continue;
-}
+//The head returned is the same as before
+//therefore no new tokens have been found in this iteration
+//One of two things may happen
+//1 - We have reached a substring that is not currently a token, but may be if given one more iteration (ie 123.)
+//2 - The largest token is the previously found token
 
+if (oldhead==head){
+puts("reached untokenizeable token");
 
-/*
-//Check for case 2 - float
+//Case 1 Check - Next token may qualify
+
+//Check for case 1 - float
 if (isPossibleFloat(currentstring)){
 puts("can possibly be float - checking next index..");
 
-char *possible_float = malloc(sizeof(char)*(size_input_string+1));
-strncpy(possible_float, dest, j+2);
-printf("checking this for a float: %s\n",  possible_float);
+char *possible_float = malloc(sizeof(char)*(i-beginSubstringIndex+2));
+possible_float = createSubstring(argv[1], beginSubstringIndex, i+1);
 
 if (isFloat(possible_float)){
 puts("next token will be float, continue iterations as normal");
 i++;
-j++;
 free(possible_float);
 continue;
 }
@@ -734,18 +670,16 @@ puts("next value will not be a float");
 free(possible_float);
 }
 
-//Check for case 2 - hex
+//Check for case 1 - hex
 if (isPossibleHex(currentstring)){
 puts("can possibly be hex - checking next index..");
 
-char *possible_hex = malloc(sizeof(char)*(size_input_string+1));
-strncpy(possible_hex, dest, j+2);
-printf("checking this for a hex: %s\n",  possible_hex);
+char *possible_hex = malloc(sizeof(char)*(i-beginSubstringIndex+2));
+possible_hex = createSubstring(argv[1], beginSubstringIndex, i+1);
 
 if (isHex(possible_hex)){
 puts("next token will be hex, continue iterations as normal");
 i++;
-j++;
 free(possible_hex);
 continue;
 }
@@ -754,45 +688,19 @@ puts("next token will not be hex");
 }
 free(possible_hex);
 }
-*/
 
-//This copies the previouly found token and prints it	
-//will obviously return this for any methods not yet written
-// but it does work for test case: ./a.out 323t
-// and test case ./a.out 323t456
-char *token = malloc(sizeof(char)*(size_input_string)+1);  
-strncpy(token, currentstring, j);
-printf("Reached a non token, tokenizing previous token: %s\n", token);
-//printf("Token Type: %d\n",head->token_type);
-if ((head->optional_c_operator_type)!=NULL){
-printf("[Token Type: %s]\n", head->optional_c_operator_type);
-}
-else{
-printf("[Token Type: %s]\n", getTokenTypeFromEnum(head->token_type));
-}
-printf("[Token String: %s]\n", head->token_string);
-//printf("token length, i: %i\n", i);
+//Case 2 - Tokenize previous token
+puts("Reached a non token, tokenizing previous token");
+printTokenFromLinkedListHead();
 
-
-//resets substring pointer to first char after token
-int token_size = strlen(token);
-//printf("token_size: %i\n", token_size);     
-dest+=token_size;
-j=-1;
-
-//move iteration back one, to examine next token
-i=i-1; //was missing this before
-
-//clears current string memory
-//currentstring = "";
-free(currentstring);
+//resets begin substring pointer to first char after the token
+beginSubstringIndex=i;
+continue;
 }
 
- j++;
- i++;
+i++;
 }
+
 	
-
-free(dest);
 return 0;
 }
