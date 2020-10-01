@@ -547,8 +547,6 @@ return 0;
 }
 
 
-
-
 int main(int argc, char** argv){
 
 //checks that we have the right number of arguements
