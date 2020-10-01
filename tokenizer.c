@@ -40,7 +40,7 @@ struct Token* head = NULL;
 //return 1 for true and 0 for false
 int Delimiter_present(char c){
   
-  if((c==' ') || (c=='\n') || (c=='\t') || (c=='\v') || (c=='\f') || (c=='\f')){
+  if((c==' ') || (c=='\n') || (c=='\t') || (c=='\v') || (c=='\r') || (c=='\f')){
      return 1;
   }
   return 0;
@@ -181,21 +181,38 @@ int isFloat(char *string){
 
 int decimal_count=0;
 int i = 0;
-	
+int decimalPosition;
+int e = 0;	
 	while (string[i]!='\0'){
 		
 		char c = string[i]-'0';
 
+		//If character has a decimal, must only have one                                                                                       
+                //And must not be at first or last index                                                                                               
+                if ((string[i]=='.')&&(i!=strlen(string)-1) &&(i!=0)){
+                decimal_count++;
+		decimalPosition=i;
+                }
+		
 		//if character is not an integer or . return false
 		if((string[i]!='.') && ((c<0) || c>9)){
-		return 0;
-		}
-		//If character has a decimal, must only have one
-		//And must not be at first or last index
-		if ((string[i]=='.')&&(i!=strlen(string)-1) &&(i!=0)){
-		decimal_count++;
-		}
 
+		  //if character is not a decimal and not an integer
+		  //then it is allowed to be e or E and also allowed to be + or - if occurring right after e/E
+		  if(e==0 && decimalPosition!=(i-1) && decimal_count==1 && (string[i]==69 || string[i]==101)){
+                  e=i;
+		  i++;
+		  continue;
+		  }
+		  else if(e==(i-1) && decimal_count==1 && (string[i]==45 || string[i]==43)){
+                  i++;
+                  continue;
+		  }
+
+		  //not an e, E, decimal, integer then return 0
+		  return 0;
+		}
+        
 	i++;
 	}
 
@@ -597,6 +614,20 @@ printf("[Token String: %s]\n", head->token_string);
 }
 
 
+int getTokenInQuotes(char* string, int begin, char quote){
+  int i=begin+1;
+  int end;
+  char* token;
+  
+  while((string[i]!=quote)){
+    i++;
+  }
+  end=i;
+
+  token = createSubstring(string,begin,end);
+  return (end+1);
+}
+
 
 int main(int argc, char** argv){
 
@@ -616,6 +647,10 @@ while(argv[1][i]!='\0'){
 
 char* currentstring = createSubstring(argv[1], beginSubstringIndex, i);
 
+/* if(argv[1][i]=='\"' || argv[1][i]=='\''){
+    i = getTokenInQuotes(argv[1], i, argv[1][i]);
+    beginSubstringIndex = i;
+    }*/ 
   if(Delimiter_present(argv[1][i])==1){
   i++;
   beginSubstringIndex++;
