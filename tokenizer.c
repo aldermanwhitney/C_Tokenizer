@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -37,6 +36,15 @@ struct Token *next;
 };
 struct Token* head = NULL;
 
+//Function to check if delimiter is present,
+//return 1 for true and 0 for false
+int Delimiter_present(char c){
+  
+  if((c==' ') || (c=='\n') || (c=='\t') || (c=='\v') || (c=='\f') || (c=='\f')){
+     return 1;
+  }
+  return 0;
+}
 
 //Function takes a pointer to a struct token,
 //adds this token to the front of the linked list, 
@@ -255,7 +263,7 @@ while (string[i]!='\0'){
 
 
 //Function iterates through string to determine              
-//whether it is an int                                                                                                                                                      //Returns 0 for false or 1 for true                                                                                                                                                      
+//whether it is an int                                                                                                                                //Returns 0 for false or 1 for true                                                                                                                                                      
 int isInt(char *string){
 int i = 0;
  if(isOctal(string)){
@@ -551,7 +559,8 @@ int main(int argc, char** argv){
 
 //checks that we have the right number of arguements
 if (argc!=2){
-return 1;
+  puts("Invalid number of arguments");
+  return 1;
 }
 	
 	
@@ -580,12 +589,15 @@ while(argv[1][i]!='\0'){
 //printf("i: %i\n", i);
 //printf("j: %i\n", j);
 
- if((argv[1][i]==' ')){
+  if(Delimiter_present(argv[1][i])==1){
   i++;
   j++;
   continue;
- }
+  }
 
+ if(argv[1][i]=='\\'){
+   printf("found back slach");
+ }
 //holds current substring we are examining 
 char *currentstring = malloc(sizeof(char)*(size_input_string)+1); 
 
