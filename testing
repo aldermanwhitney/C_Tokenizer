@@ -1,9 +1,0 @@
-String Copied: 123-
-Current Substring: 1
-found int
-Current Substring: 12
-found int
-Current Substring: 123
-found int
-Current Substring: 123-
-Reached the end of the string:, tokenizing the rest of the token: 123-
