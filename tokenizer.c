@@ -4,25 +4,35 @@
 #include <ctype.h>
 #include <string.h>
 
-//Defining Node for Linked List
-struct Node{
-  //  int *truth_values = malloc( (sizeof(int)) * 5);
-  char *token;
-  struct node *prev;
-  struct Node *next;
-};
- // struct Node* head;
 
-struct C_Operator{
-char *operator_name;
-int operator_length;
-};
+enum token_type {Integer, Word, Hexadecimal, Octal, FloatingPoint, COperator};
 
-enum token_type{integer, word, hexadecimal, octal, floating_point, c_operator};
+
+/*Function takes a token_type enum
+ *and returns a pointer to the string that it represents
+ */
+char* getTokenTypeFromEnum(enum token_type tt){
+
+char *tokentype = malloc(sizeof(char)*30);
+
+switch(tt){
+	case 0: tokentype = "decimal integer"; break;
+	case 1: tokentype = "word"; break;
+	case 2: tokentype = "hexadecimal integer"; break;
+	case 3: tokentype = "octal integer"; break;
+	case 4: tokentype = "floating point"; break;
+	case 5: tokentype = "C operator"; break;
+	default: return tokentype;
+} 
+return tokentype;
+}
+
+
 
 struct Token{
 char *token_string;
 enum token_type token_type;
+char *optional_c_operator_type;
 struct Token *next;
 };
 struct Token* head = NULL;
@@ -50,7 +60,6 @@ return token;
 }
 
 
-
 int isWord(char *string){
   int i = 1;
   //checks if first character is an alphabet
@@ -69,7 +78,41 @@ int isWord(char *string){
   return 1;
 }
 
-int isHex(char *string){
+
+int isHex(char* string){
+ 
+if(strlen(string)<=2){
+return 0;
+}
+
+//if first character is not zero then return false 
+  if((string[0]-'0')!= 0){
+    return 0;
+  }
+  int c = string[1];
+  //if second character is not 'x' then return false                                                                                                                                     
+  if(c!=88 && c!=120){
+    return 0;
+  }
+  //check if following characters are alphanumeric                                                                                                                                       
+  int i = 2;
+  while(string[i]!='\0'){
+     //if its not an alphabet from a-f & A-F then check its a digit, if not then return false                                                                                            
+    // if(string[i]<65 || (string[i]>70 && string[i]<97) || string[i]>102){
+    //if(isdigit(string[i])==0){
+    if(isxdigit(string[i])==0){
+      printf("end of hex\n");
+      return 0;
+    }
+  
+    i++;
+  }
+  return 1;
+}
+
+
+
+int isPossibleHex(char *string){
   //if first character is not zero then return false                                                                                                                                     
   if((string[0]-'0')!= 0){
     return 0;
@@ -86,7 +129,7 @@ int isHex(char *string){
     // if(string[i]<65 || (string[i]>70 && string[i]<97) || string[i]>102){
     // if(isdigit(string[i])==0){
     if(isxdigit(string[i])==0){
-      printf("end of hex");
+      printf("end of hex\n");
       return 0;
     }
   
@@ -121,7 +164,11 @@ while (string[i]!='\0'){
  return 1;
 }
 
-
+/*Given a string,
+ * Function will return true (1) or false(0)
+ *if the string is currently, as it stands, a float 
+ *ie 436.1 or 117.2
+ */
 int isFloat(char *string){
 
 int decimal_count=0;
@@ -151,7 +198,11 @@ return 1;
 }
 
 
-
+/**Function is given a string
+ * and returns a boolean if the string could possibly
+ * be a float on the next iteration
+ *ie 436. or 117.
+ */
 int isPossibleFloat(char *string){
 int i = 0;
 int t = 0;
@@ -203,9 +254,8 @@ while (string[i]!='\0'){
 }
 
 
-//Function iterates through string to determine                                                                                                                                          
-//whether it is an int                                                                                                                                                                   
-//Returns 0 for false or 1 for true                                                                                                                                                      
+//Function iterates through string to determine              
+//whether it is an int                                                                                                                                                      //Returns 0 for false or 1 for true                                                                                                                                                      
 int isInt(char *string){
 int i = 0;
  if(isOctal(string)){
@@ -229,22 +279,17 @@ return 1;
  * and returns a pointer to a newly malloced char array
  *this char array will contain an empty string, if the input is not a C operator
  or it will return a pointer to a string which describes the type of c operator it is
- I'm going to clean this up a bit later to optimize, but it works well
- try ./a.out test->ing
- 
  */
 
-//char* isC_Operator(char *string){
+char* isC_Operator(char *string){
 
-struct C_Operator* isC_Operator(char *string){
+char *c_op = malloc(sizeof(char)*50);	
 
-//char *c_op = malloc(sizeof(char)*50);	
+//struct C_Operator *c_operator_struct = malloc(sizeof(struct C_Operator));
+//c_operator_struct->operator_length=0;
+//c_operator_struct->operator_name="";
 
-struct C_Operator *c_operator_struct = malloc(sizeof(struct C_Operator));
-c_operator_struct->operator_length=0;
-c_operator_struct->operator_name="";
-
-//c_op = "";
+c_op = "";
 
 int i = 0;	
 //char c = string[0];
@@ -256,75 +301,75 @@ int i = 0;
 //if the string is length one, choose from possible operators
 if (strlen(string)==1){
 
-c_operator_struct->operator_length=1;
+//c_operator_struct->operator_length=1;
 switch(string[i]) {
 	case '(':
 		//puts("found left parenthesis");
-		//c_op = "left parenthesis";	
-		//return c_op;
-		c_operator_struct->operator_name = "left parenthesis";
-		return c_operator_struct;
+		c_op = "left parenthesis";	
+		return c_op;
+		//c_operator_struct->operator_name = "left parenthesis";
+		//return c_operator_struct;
         case ')':
-		c_operator_struct->operator_name = "right parenthesis";
-		return c_operator_struct;
+		c_op = "right parenthesis";
+		return c_op;
         case '[': 
-		c_operator_struct->operator_name = "left bracket";
-		return c_operator_struct;
+		c_op = "left bracket";
+		return c_op;
 	case ']':
-		c_operator_struct->operator_name = "right bracket";
-		return c_operator_struct;
+		c_op = "right bracket";
+		return c_op;
 	case '.':
-		c_operator_struct->operator_name = "structure member";
-		return c_operator_struct;
+		c_op = "structure member";
+		return c_op;
 	case ',':
-		c_operator_struct->operator_name = "comma";
-		return c_operator_struct;
+		c_op = "comma";
+		return c_op;
 	case '!':
-		c_operator_struct->operator_name = "negate";
-		return c_operator_struct;
+		c_op = "negate";
+		return c_op;
 	case '~':
-		c_operator_struct->operator_name = "1s complement";
-		return c_operator_struct;
+		c_op = "1s complement";
+		return c_op;
 	case '^':
-		c_operator_struct->operator_name = "bitwise XOR";
-		return c_operator_struct;
+		c_op = "bitwise XOR";
+		return c_op;
 	case '|':
-		c_operator_struct->operator_name = "bitwise OR";
-		return c_operator_struct;
+		c_op = "bitwise OR";
+		return c_op;
 	case '+':
-		c_operator_struct->operator_name = "addition";
-		return c_operator_struct;
+		c_op = "addition";
+		return c_op;
 	case '/':
-		c_operator_struct->operator_name = "division";
-		return c_operator_struct;
+		c_op = "division";
+		return c_op;
 	case '?':
-		c_operator_struct->operator_name = "conditional true";
-		return c_operator_struct;
+		c_op = "conditional true";
+		return c_op;
 	case ':':   		
-		c_operator_struct->operator_name = "conditional false";
-		return c_operator_struct;
+		c_op = "conditional false";
+		return c_op;
 	case '<':
-		c_operator_struct->operator_name = "less than test";
-		return c_operator_struct;
+		c_op = "less than test";
+		return c_op;
 	case '>':
-		c_operator_struct->operator_name = "greater than test";
-		return c_operator_struct;
+		c_op = "greater than test";
+		return c_op;
 	case '=':
-		c_operator_struct->operator_name = "assignment";
-		return c_operator_struct;
+		c_op = "assignment";
+		return c_op;
 	case '&':
-		c_operator_struct->operator_name = "AND/address operator";
-		return c_operator_struct;
+		c_op = "AND/address operator";
+		return c_op;
 	case '-':
-		c_operator_struct->operator_name = "minus/subtract operator";
-		return c_operator_struct;
+		c_op = "minus/subtract operator";
+		return c_op;
 	case '*':
-		c_operator_struct->operator_name = "multiply/dereference operator";
-		return c_operator_struct;
+		c_op = "multiply/dereference operator";
+		return c_op;
 	default:
-		c_operator_struct->operator_length=0;
-		//return c_op;
-		return c_operator_struct;
+		//c_operator_struct->operator_length=0;
+		return c_op;
+		//return c_operator_struct;
 	}
 
 
@@ -332,116 +377,117 @@ switch(string[i]) {
 
 if (strlen(string)==2){
 
-c_operator_struct->operator_length=2;
+	
+//c_operator_struct->operator_length=2;
 
 char c1 = string[0];
 char c2 = string[1];
 
 
 if ((c1 =='-') && (c2 == '>')){	
-c_operator_struct->operator_name = "structure pointer";
-return c_operator_struct;
-//c_op = "structure pointer";
-//return c_op;
+//c_operator_struct->operator_name = "structure pointer";
+//return c_operator_struct;
+c_op = "structure pointer";
+return c_op;
 }
 
 if ((c1 =='>') && (c2 == '>')){
-c_operator_struct->operator_name = "shift right";
-return c_operator_struct;
+c_op = "shift right";
+return c_op;
 }
 
 if ((c1 =='<') && (c2 == '<')){
-c_operator_struct->operator_name = "shift left";
-return c_operator_struct;
+c_op = "shift left";
+return c_op;
 }
 if ((c1 =='+') && (c2 == '+')){
-c_operator_struct->operator_name = "increment";
-return c_operator_struct;
+c_op = "increment";
+return c_op;
 }
 if ((c1 =='-') && (c2 == '-')){
-c_operator_struct->operator_name = "decrement";
-return c_operator_struct;
+c_op = "decrement";
+return c_op;
 }
 
 if ((c1 =='|') && (c2 == '|')){
-c_operator_struct->operator_name = "logical OR";
-return c_operator_struct;
+c_op = "logical OR";
+return c_op;
 }
 if ((c1 =='&') && (c2 == '&')){
-c_operator_struct->operator_name = "logical AND";
-return c_operator_struct;
+c_op = "logical AND";
+return c_op;
 }
 if ((c1 =='=') && (c2 == '=')){
-c_operator_struct->operator_name = "equality test";
-return c_operator_struct;
+c_op = "equality test";
+return c_op;
 }
 if ((c1 =='!') && (c2 == '=')){
-c_operator_struct->operator_name = "inequality test";
-return c_operator_struct;
+c_op = "inequality test";
+return c_op;
 }
 if ((c1 =='<') && (c2 == '=')){
-c_operator_struct->operator_name = "less than or equal test";
-return c_operator_struct;
+c_op = "less than or equal test";
+return c_op;
 }
 if ((c1 =='>') && (c2 == '=')){
-c_operator_struct->operator_name = "greater than or equal test";
-return c_operator_struct;
+c_op = "greater than or equal test";
+return c_op;
 }
 if ((c1 =='+') && (c2 == '=')){
-c_operator_struct->operator_name = "plus equals";
-return c_operator_struct;
+c_op = "plus equals";
+return c_op;
 }
 if ((c1 =='-') && (c2 == '=')){
-c_operator_struct->operator_name = "minus equals";
-return c_operator_struct;
+c_op = "minus equals";
+return c_op;
 }
 if ((c1 =='*') && (c2 == '=')){
-c_operator_struct->operator_name = "times equals";
-return c_operator_struct;
+c_op = "times equals";
+return c_op;
 }
 if ((c1 =='/') && (c2 == '=')){
-c_operator_struct->operator_name = "divide equals";
-return c_operator_struct;
+c_op = "divide equals";
+return c_op;
 }
 if ((c1 =='%') && (c2 == '=')){
-c_operator_struct->operator_name = "mod equals";
-return c_operator_struct;
+c_op = "mod equals";
+return c_op;
 }
 if ((c1 =='&') && (c2 == '=')){	
-c_operator_struct->operator_name = "bitwise AND equals";
-return c_operator_struct;
+c_op = "bitwise AND equals";
+return c_op;
 }
 if ((c1 =='^') && (c2 == '=')){
-c_operator_struct->operator_name = "bitwise XOR equals";
-return c_operator_struct;
+c_op = "bitwise XOR equals";
+return c_op;
 }
 if ((c1 =='|') && (c2 == '=')){
-c_operator_struct->operator_name = "bitwise OR equals";
-return c_operator_struct;
+c_op = "bitwise OR equals";
+return c_op;
 }
 
-c_operator_struct->operator_length=0;
-return c_operator_struct;
+//c_operator_struct->operator_length=0;
+return c_op;
 }
 
 
 //Strings length 3
 if (strlen(string)==3){
 
-c_operator_struct->operator_length=3;
+//c_operator_struct->operator_length=3;
 	
 char c1 = string[0];
 char c2 = string[1];
 char c3 = string[2];
 	
 if ((c1 =='>') && (c2 == '>') && (c3=='=')) {
-c_operator_struct->operator_name = "shift right equals";
-return c_operator_struct;
+c_op = "shift right equals";
+return c_op;
 }
 
 if ((c1 =='<') && (c2 == '<')&& (c3=='=')){
-c_operator_struct->operator_name = "shift left equals";
-return c_operator_struct;
+c_op = "shift left equals";
+return c_op;
 }
 
 
@@ -449,10 +495,58 @@ return c_operator_struct;
 }
 
 
-  c_operator_struct->operator_length=0;
-  return c_operator_struct;
-
+  //c_operator_struct->operator_length=0;
+  //return c_operator_struct;
+	return c_op;
 }
+
+
+int checkIfNextIterationWillBeToken(char *currentstring, char *dest, int j, int size_input_string){
+
+//Check for case 2 - float
+if (isPossibleFloat(currentstring)){
+puts("can possibly be float - checking next index..");
+
+char *possible_float = malloc(sizeof(char)*(size_input_string+1));
+strncpy(possible_float, dest, j+2);
+printf("checking this for a float: %s\n",  possible_float);
+
+if (isFloat(possible_float)){
+puts("next token will be float, continue iterations as normal");
+free(possible_float);
+return 1;
+}
+else{
+puts("next value will not be a float");
+}
+free(possible_float);
+return 0;
+}
+
+//Check for case 2 - hex
+if (isPossibleHex(currentstring)){
+puts("can possibly be hex - checking next index..");
+
+char *possible_hex = malloc(sizeof(char)*(size_input_string+1));
+strncpy(possible_hex, dest, j+2);
+printf("checking this for a hex: %s\n",  possible_hex);
+
+if (isHex(possible_hex)){
+puts("next token will be hex, continue iterations as normal");
+free(possible_hex);
+return 1;
+}
+else{
+puts("next token will not be hex");
+}
+free(possible_hex);
+return 0;
+}
+
+return 0;
+}
+
+
 
 
 int main(int argc, char** argv){
@@ -481,6 +575,7 @@ printf("String Copied: %s\n", dest);
 //j+1 is the length of the substring we are currently examining
 int i = 0;
 int j = 0;
+
 //iterate through input string char by char until the null terminator
 while(argv[1][i]!='\0'){
 
@@ -493,8 +588,10 @@ while(argv[1][i]!='\0'){
   continue;
  }
 
+//holds current substring we are examining 
 char *currentstring = malloc(sizeof(char)*(size_input_string)+1); 
 
+//this creates the substring which we are examining
 //each iteration, copies destination (argv[1]) into our current string, for a length of j+1
 //j will increment past a token when it is found
 strncpy(currentstring,dest,j+1);
@@ -509,136 +606,110 @@ int hex = 0;
 int integer = 0;
 int floatp = 0;
 int coperator = 0;
-
-int coperator_index_increment = 0;
  
-coperator_index_increment = 0;
+//Determine what type of token the substring is
+//and create a struct token (linked list node) for it, and add to front of linked list
+//If multiple types are possible, head will point to the node that was last added
+//And that is the only one we need
+//Current precedence is order of if statements - word,int,float,hex,octal,c operator
 if (isWord(currentstring)){
 puts("found word");
 word = 1;
-
-struct Token *word_token = malloc(sizeof(struct Token));
-word_token->token_string =currentstring;
-word_token->token_type = word;
-
-if (head!=NULL){
-head->next=word_token;
-}
-head = word_token;
-}
-if(isHex(currentstring)){
-puts("found hex");
-hex = 1;
-struct Token *hex_token = malloc(sizeof(struct Token));
-hex_token->token_string =currentstring;
-hex_token->token_type = hexadecimal;
-
-if (head!=NULL){
-head->next=hex_token;
-}
-head = hex_token;
-}
-if (isOctal(currentstring)){
-puts("found octal");
-octal = 1;
-struct Token *octal_token = malloc(sizeof(struct Token));
-octal_token->token_string =currentstring;
-octal_token->token_type = octal;
-
-if (head!=NULL){
-head->next=octal_token;
-}
-head = octal_token;
-}
-if(isFloat(currentstring)){
-puts("found float");
-floatp = 1;
-struct Token *float_token = createToken(currentstring, floating_point);
-head = addTokentoLinkedList(float_token);
+struct Token *word_token = createToken(currentstring, Word);
+head = addTokentoLinkedList(word_token);
 }
 if(isInt(currentstring)){
 puts("found int");
 integer = 1;
-struct Token *int_token = createToken(currentstring, integer);
+struct Token *int_token = createToken(currentstring, Integer);
 head = addTokentoLinkedList(int_token);
-
-/*
-struct Token *int_token = malloc(sizeof(struct Token));
-int_token->token_string =currentstring;
-int_token->token_type = integer;
-printf("integer token type:%d", int_token->token_type );
-if (head!=NULL){
-head->next=int_token;
 }
-head = int_token;
-
-*/
-
-
-//printf("head token type:%d", head->token_type );
-//if((head->token_type)==integer){
-//puts("yes, token type is an integer");
-//}
-
+if(isFloat(currentstring)){
+puts("found float");
+floatp = 1;
+struct Token *float_token = createToken(currentstring, FloatingPoint);
+head = addTokentoLinkedList(float_token);
 }
-
-if (coperator_index_increment){
+if(isHex(currentstring)){
+puts("found hex");
+hex = 1;
+struct Token *hex_token = createToken(currentstring, Hexadecimal);
+head = addTokentoLinkedList(hex_token);
+}
+if (isOctal(currentstring)){
+puts("found octal");
+octal = 1;
+struct Token *octal_token = createToken(currentstring, Octal);
+head = addTokentoLinkedList(octal_token);
 }
 
-//Pointer that points to the string returned by isC_Operator
-//char *str = isC_Operator(currentstring);
+//pointer that points to the string returned by isC_Operator
+char *str = isC_Operator(currentstring);
 
+//If the string returned is not empty, we have found a string operator
+if(strlen(str)!=0){
+printf("found C Operator: %s\n", str);
+coperator = 1;
+
+struct Token *c_operator_token = createToken(currentstring, COperator);
+//c_operator_token->optional_c_operator_type=c_operator_struct->operator_name;
+c_operator_token->optional_c_operator_type=str;
+head = addTokentoLinkedList(c_operator_token);
+}
+
+/*ignore**
 //Pointer that points to C_operator struct
-struct C_Operator *c_operator_struct = isC_Operator(currentstring);
+//struct C_Operator *c_operator_struct = isC_Operator(currentstring);
 
 //if the c operator struct contains an operator length other than zero, we have found a c operator
 if((c_operator_struct->operator_length)!=0){
 printf("found C Operator: %s\n", (c_operator_struct->operator_name));
 coperator = 1;
 coperator_index_increment = (c_operator_struct->operator_length);
+*/
 
 
-struct Token *c_operator_token = malloc(sizeof(struct Token));
-c_operator_token->token_string =currentstring;
-c_operator_token->token_type = c_operator;
-
-if (head!=NULL){
-head->next=c_operator_token;
-}
-head = c_operator_token;
-
-
-}
-
-
-//If the string returned is not empty, we have found a string operator
-//will need to increment accordingly here depening on whether its 1,2 or 3 characters
-//probably need another function to do that
-//maybe use an enum
-//if(strlen(str)!=0){
-//printf("found C Operator: %s\n", str);
-//coperator = 1;
-//}
-
-//Token does not qualify for any cases - the largest token is the previously found token
-//OR we have reached the char just before the null terminator
+//Token does not qualify for any cases - 
+//One of three things may happen
+//1 - the largest token is the previously found token
+//2 - We have reached a substring that is not currently a token, but may be if given one more iteration (ie 123.)
+//3 - we have reached the char just before the null terminator
 if (((!word) && (!octal) && (!hex) && (!integer) && (!floatp) && (!coperator)) || (argv[1][i+1]=='\0')){
 
-
+//Case 3	
+//reached the end of the string
 if((argv[1][i+1]=='\0')){	
 strncpy(currentstring,dest,j+2);  
 char *token = malloc(sizeof(char)*(size_input_string)+1);
 strncpy(token, currentstring, ((strlen(currentstring)+j+1)) );
 printf("Reached the end of the string:, tokenizing the rest of the token: %s\n", token);
+if ((head->optional_c_operator_type)!=NULL){
+printf("[Token Type: %s]\n", head->optional_c_operator_type);
+}
+else{
+printf("[Token Type: %s]\n", getTokenTypeFromEnum(head->token_type));
+}
+printf("[Token String: %s]\n", head->token_string);
 return 0;
 }
 
+//Case 2
+//May be token in next iteration
+if(checkIfNextIterationWillBeToken(currentstring, dest, j, size_input_string)){
+i++;
+j++;
+continue;
+}
+
+
+/*
+//Check for case 2 - float
 if (isPossibleFloat(currentstring)){
 puts("can possibly be float - checking next index..");
 
 char *possible_float = malloc(sizeof(char)*(size_input_string+1));
 strncpy(possible_float, dest, j+2);
-printf("checking this for a float:%s\n",  possible_float);
+printf("checking this for a float: %s\n",  possible_float);
 
 if (isFloat(possible_float)){
 puts("next token will be float, continue iterations as normal");
@@ -647,9 +718,33 @@ j++;
 free(possible_float);
 continue;
 }
+else{
+puts("next value will not be a float");
+}
 free(possible_float);
 }
 
+//Check for case 2 - hex
+if (isPossibleHex(currentstring)){
+puts("can possibly be hex - checking next index..");
+
+char *possible_hex = malloc(sizeof(char)*(size_input_string+1));
+strncpy(possible_hex, dest, j+2);
+printf("checking this for a hex: %s\n",  possible_hex);
+
+if (isHex(possible_hex)){
+puts("next token will be hex, continue iterations as normal");
+i++;
+j++;
+free(possible_hex);
+continue;
+}
+else{
+puts("next token will not be hex");
+}
+free(possible_hex);
+}
+*/
 
 //This copies the previouly found token and prints it	
 //will obviously return this for any methods not yet written
@@ -658,9 +753,17 @@ free(possible_float);
 char *token = malloc(sizeof(char)*(size_input_string)+1);  
 strncpy(token, currentstring, j);
 printf("Reached a non token, tokenizing previous token: %s\n", token);
-printf("Token Type: %d\n",head->token_type);
-printf("Token String: %s\n", head->token_string);
+//printf("Token Type: %d\n",head->token_type);
+if ((head->optional_c_operator_type)!=NULL){
+printf("[Token Type: %s]\n", head->optional_c_operator_type);
+}
+else{
+printf("[Token Type: %s]\n", getTokenTypeFromEnum(head->token_type));
+}
+printf("[Token String: %s]\n", head->token_string);
 //printf("token length, i: %i\n", i);
+
+
 //resets substring pointer to first char after token
 int token_size = strlen(token);
 //printf("token_size: %i\n", token_size);     
