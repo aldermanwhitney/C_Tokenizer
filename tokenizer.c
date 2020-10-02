@@ -4,7 +4,7 @@
 #include <string.h>
 
 
-enum token_type {Integer, Word, Hexadecimal, Octal, FloatingPoint, COperator};
+enum token_type {Integer, Word, Hexadecimal, Octal, FloatingPoint, COperator, CKeyword};
 
 
 /*Function takes a token_type enum
@@ -21,6 +21,7 @@ switch(tt){
 	case 3: tokentype = "octal integer"; break;
 	case 4: tokentype = "floating point"; break;
 	case 5: tokentype = "C operator"; break;
+	case 6: tokentype = "C keyword"; break;
 	default: return tokentype;
 } 
 return tokentype;
@@ -501,11 +502,86 @@ return c_op;
 
 
 }
+if(strlen(string)==(6)){
 
+if(strcmp(string, "sizeof")==0){
+c_op = "sizeof";
+return c_op;	
+}
+
+}
 
   //c_operator_struct->operator_length=0;
   //return c_operator_struct;
 	return c_op;
+}
+
+int isCKeyword(char* string){
+
+int string_length = strlen(string);
+	
+if(string_length==2){
+if((strcmp(string, "if")==0) || (strcmp(string, "do")==0)){
+return 1;
+}
+
+return 0;
+}	
+
+if(string_length==3){
+if((strcmp(string, "int")==0) || (strcmp(string, "for")==0)){
+return 1;
+}
+return 0;
+}
+
+if(string_length==4){
+
+if((strcmp(string, "auto")==0) || (strcmp(string, "long")==0) || (strcmp(string, "void")==0) || (strcmp(string, "else")==0)
+|| (strcmp(string, "case")==0) || (strcmp(string, "enum")==0) || (strcmp(string, "goto")==0) || (strcmp(string, "char")==0)){
+return 1;
+}
+return 0;
+}
+
+if(string_length==5){
+
+if((strcmp(string, "const")==0) || (strcmp(string, "short")==0) || (strcmp(string, "float")==0)
+|| (strcmp(string, "break")==0) || (strcmp(string, "union")==0) || (strcmp(string, "while")==0)){
+return 1;
+}
+return 0;	
+}
+
+if(string_length==6){
+
+if((strcmp(string, "double")==0) || (strcmp(string, "signed")==0) || (strcmp(string, "switch")==0)
+|| (strcmp(string, "return")==0) || (strcmp(string, "static")==0) || (strcmp(string, "extern")==0)
+|| (strcmp(string, "struct")==0)){
+return 1;
+}
+return 0;
+}
+
+if(string_length==7){
+
+if((strcmp(string, "default")==0) || (strcmp(string, "typedef")==0)){
+return 1;
+}
+return 0;
+}
+
+if(string_length==8){
+
+if((strcmp(string, "unsigned")==0) || (strcmp(string, "continue")==0) || (strcmp(string, "register")==0)
+|| (strcmp(string, "volatile")==0)
+){
+return 1;
+}
+return 0;
+}
+
+return 0;
 }
 
 
@@ -542,6 +618,11 @@ if (isWord(currentstring)){
 puts("found word");
 struct Token *word_token = createToken(currentstring, Word);
 head = addTokentoLinkedList(word_token);
+}
+if(isCKeyword(currentstring)){
+puts("found C Keyword");
+struct Token *c_keyword_token = createToken(currentstring, CKeyword);
+head = addTokentoLinkedList(c_keyword_token);
 }
 if(isInt(currentstring)){
 puts("found int");
@@ -583,16 +664,20 @@ return head;
 
 
 /*This function will print the string and type
- *of the token at the head of the linked list
+ *of a token, given a pointer to it
+ *for null token, will return without printing
  */
-void printTokenFromLinkedListHead(){
-if ((head->optional_c_operator_type)!=NULL){
-printf("[Token Type: %s]\n", head->optional_c_operator_type);
+void printToken(struct Token* token){
+if(token==NULL){
+return;
+}	
+if ((token->optional_c_operator_type)!=NULL){
+printf("[Token Type: %s]\n", token->optional_c_operator_type);
 }
 else{
-printf("[Token Type: %s]\n", getTokenTypeFromEnum(head->token_type));
+printf("[Token Type: %s]\n", getTokenTypeFromEnum(token->token_type));
 }
-printf("[Token String: %s]\n", head->token_string);
+printf("[Token String: %s]\n", token->token_string);
 //printf("token length, i: %i\n", i);
 }
 
@@ -604,7 +689,19 @@ if (argc!=2){
   puts("Invalid number of arguments");
   return 1;
 }
-		
+
+//////TO TEST DIFFERENT INPUT STRING, COMMENT OUT THE FOLLOWING 3 LINES
+//Copies string from argv[1] into inputstring
+int size_input_string = strlen(argv[1]);
+char *inputString = malloc(sizeof(char)*(size_input_string)+1);
+strncpy(inputString, argv[1], size_input_string+1);
+/////
+
+////////TO TEST DIFFERENT INPUTSTRINGS, UNCOMMENT THIS SINGLE LINE WITH YOUR INPUT
+//char inputString[] = "123\ntest";
+///////
+
+
 //i iterates through input string char by char
 //beginIndex is the beginning of the current substring we are examing 
 //beginIndex will advance to beginIndex = i when a token is found, to examine new substring
@@ -612,17 +709,17 @@ int i = 0;
 int beginSubstringIndex = 0;
 
 //iterate through input string char by char until the null terminator
-while(argv[1][i]!='\0'){
+while(inputString[i]!='\0'){
 
-char* currentstring = createSubstring(argv[1], beginSubstringIndex, i);
+char* currentstring = createSubstring(inputString, beginSubstringIndex, i);
 
-  if(Delimiter_present(argv[1][i])==1){
+  if(Delimiter_present(inputString[i])==1){
   i++;
   beginSubstringIndex++;
   continue;
   }
 
- if(argv[1][i]=='\\'){
+ if(inputString[i]=='\\'){
    printf("found back slash");
  } 
 
@@ -634,11 +731,11 @@ char* currentstring = createSubstring(argv[1], beginSubstringIndex, i);
 head = add_viable_tokens_to_linkedlist(currentstring);
 
 //reached the end of the string
-if(argv[1][i+1]=='\0'){	  
-puts("reached the end of the string, tokenizing rest of the token");
-printTokenFromLinkedListHead();
-return 0;
-}
+//if(argv[1][i+1]=='\0'){	  
+//puts("reached the end of the string, tokenizing rest of the token");
+//printTokenFromLinkedListHead();
+//return 0;
+//}
 
 //The head returned is the same as before
 //therefore no new tokens have been found in this iteration
@@ -652,11 +749,11 @@ puts("reached untokenizeable token");
 //Case 1 Check - Next token may qualify
 
 //Check for case 1 - float
-if (isPossibleFloat(currentstring)){
+if (isPossibleFloat(currentstring) && (inputString[i+1]!='\0')){
 puts("can possibly be float - checking next index..");
 
 char *possible_float = malloc(sizeof(char)*(i-beginSubstringIndex+2));
-possible_float = createSubstring(argv[1], beginSubstringIndex, i+1);
+possible_float = createSubstring(inputString, beginSubstringIndex, i+1);
 
 if (isFloat(possible_float)){
 puts("next token will be float, continue iterations as normal");
@@ -671,11 +768,11 @@ free(possible_float);
 }
 
 //Check for case 1 - hex
-if (isPossibleHex(currentstring)){
+if (isPossibleHex(currentstring) && (inputString[i+1]!='\0')){
 puts("can possibly be hex - checking next index..");
 
 char *possible_hex = malloc(sizeof(char)*(i-beginSubstringIndex+2));
-possible_hex = createSubstring(argv[1], beginSubstringIndex, i+1);
+possible_hex = createSubstring(inputString, beginSubstringIndex, i+1);
 
 if (isHex(possible_hex)){
 puts("next token will be hex, continue iterations as normal");
@@ -691,7 +788,7 @@ free(possible_hex);
 
 //Case 2 - Tokenize previous token
 puts("Reached a non token, tokenizing previous token");
-printTokenFromLinkedListHead();
+printToken(head);
 
 //resets begin substring pointer to first char after the token
 beginSubstringIndex=i;
@@ -700,7 +797,7 @@ continue;
 
 i++;
 }
-
+printToken(head);
 	
 return 0;
 }
