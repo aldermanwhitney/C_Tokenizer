@@ -69,6 +69,27 @@ return token;
 }
 
 
+/**Function frees entire linked list
+ *given a pointer to the head
+ *
+*/
+void freeLinkedList(struct Token* head){
+
+struct Token* current;
+current = head;
+
+while((current->next)!=NULL){
+current = current->next;
+free(head);
+head = current;
+}
+free(head);
+	
+}
+
+
+
+
 int isWord(char *string){
   int i = 1;
   //checks if first character is an alphabet
@@ -687,18 +708,23 @@ return head;
 void printToken(struct Token* token){
 if(token==NULL){
 return;
-}	
+}
+//printing a c operator token type
 if ((token->optional_c_operator_type)!=NULL){
-printf("[Token Type: %s]\n", token->optional_c_operator_type);
+printf("%s: ", token->optional_c_operator_type);
 }
+
 else{
-printf("[Token Type: %s]\n", getTokenTypeFromEnum(token->token_type));
+//print any other token type	
+printf("%s: ", getTokenTypeFromEnum(token->token_type));
 }
-printf("[Token String: %s]\n", token->token_string);
+
+//printing token string
+printf("\"%s\"\n", token->token_string);
 //printf("token length, i: %i\n", i);
 }
 
-/*
+/*This method is already written above
 int getTokenInQuotes(char* string, int begin, char quote){
   int i=begin+1;
   int end;
@@ -738,11 +764,11 @@ strncpy(inputString, argv[1], size_input_string+1);
 //beginIndex will advance to beginIndex = i when a token is found, to examine new substring
 int i = 0;
 int beginSubstringIndex = 0;
-
+char* currentstring;
 //iterate through input string char by char until the null terminator
 while(inputString[i]!='\0'){
 
-char* currentstring = createSubstring(inputString, beginSubstringIndex, i);
+currentstring = createSubstring(inputString, beginSubstringIndex, i);
 
 /* if(argv[1][i]=='\"' || argv[1][i]=='\''){
     i = getTokenInQuotes(argv[1], i, argv[1][i]);
@@ -830,9 +856,15 @@ beginSubstringIndex=i;
 continue;
 }
 
+
 i++;
 }
+
 printToken(head);
-	
+
+
+free(inputString);
+free(currentstring);
+freeLinkedList(head);	
 return 0;
 }
