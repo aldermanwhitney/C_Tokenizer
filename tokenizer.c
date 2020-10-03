@@ -91,7 +91,12 @@ free(head);
 
 
 
-
+/*This function, given a string
+checks if its a word that is,
+it starts with an alphabet 
+and is allowed to have alphanumeric characters
+following the first alphabet
+return 1 for true, 0 for false */
 int isWord(char *string){
   int i = 1;
   //checks if first character is an alphabet
@@ -110,7 +115,9 @@ int isWord(char *string){
   return 1;
 }
 
-
+/*This function, given a string
+check if the string as it stands a hexadecimal integer
+Returns 1 for true, 0 for false*/
 int isHex(char* string){
  
 if(strlen(string)<=2){
@@ -129,9 +136,7 @@ return 0;
   //check if following characters are alphanumeric                                                                                                                                       
   int i = 2;
   while(string[i]!='\0'){
-     //if its not an alphabet from a-f & A-F then check its a digit, if not then return false                                                                                            
-    // if(string[i]<65 || (string[i]>70 && string[i]<97) || string[i]>102){
-    //if(isdigit(string[i])==0){
+     //if its not an alphabet from a-f & A-F then check its a digit, if not then return false                                                                                        
     if(isxdigit(string[i])==0){
       printf("end of hex\n");
       return 0;
@@ -143,7 +148,9 @@ return 0;
 }
 
 
-
+/*This function, given a string
+check if it could possibly be a hex
+returns 1 for true and 0 for false*/
 int isPossibleHex(char *string){
   //if first character is not zero then return false                                                                                                                                     
   if((string[0]-'0')!= 0){
@@ -157,9 +164,7 @@ int isPossibleHex(char *string){
   //check if following characters are alphanumeric                                                                                                                                       
   int i = 2;
   while(string[i]!='\0'){
-     //if its not an alphabet from a-f & A-F then check its a digit, if not then return false                                                                                            
-    // if(string[i]<65 || (string[i]>70 && string[i]<97) || string[i]>102){
-    // if(isdigit(string[i])==0){
+     //if its not an alphabet from a-f & A-F then check its a digit, if not then return false                                                                                
     if(isxdigit(string[i])==0){
       printf("end of hex\n");
       return 0;
@@ -170,6 +175,9 @@ int isPossibleHex(char *string){
   return 1;
 }
 
+/*Given a string, this function determines
+if its an Octal integer 
+It returns 1 for true and 0 for false*/
 int isOctal(char *string){
   int i = 1;
 
@@ -178,13 +186,6 @@ int isOctal(char *string){
   }
 
 while (string[i]!='\0'){
-
-  //checking for delimitters spc, tab, newline, vertical tab, form feed and carriage return                                                          
-  /* if((string[i]==32) || (string[i]==9) || (string[i]==10) || (string[i]==11) || (string[i]==12) || (string[i]==13))
-      { 
-	return 0;
-      }
-  */
 //converts char to int                                                      
   int c = string[i]-'0';
 //reached a character not between 0 and 7
@@ -304,7 +305,7 @@ while (string[i]!='\0'){
 
 
 //Function iterates through string to determine              
-//whether it is an
+//whether it is a decimal integer
 //Returns 0 for false or 1 for true                                                                                                                                                      
 int isInt(char *string){
 int i = 0;
@@ -727,7 +728,11 @@ printf("\"%s\"\n", token->token_string);
 //printf("token length, i: %i\n", i);
 }
 
-//This method is already written above
+/*This function will return an integer which 
+  gives the index of the first character 
+  after a double or single quote pair
+  and tokenizes the string that was
+  in between the quotes pair*/
 int getTokenInQuotes(char* string, int begin, char quote){
   int i=begin+1;
   int end;
@@ -739,7 +744,7 @@ int getTokenInQuotes(char* string, int begin, char quote){
   end=i;
 
   token = createSubstring(string,begin,end);
-
+  //tokenizing string in between quotations depending on type of quotation
   if(quote=='\"'){
   struct Token *single_quote_token = createToken(token,SingleQuote);
   head = addTokentoLinkedList(single_quote_token);
@@ -751,21 +756,30 @@ int getTokenInQuotes(char* string, int begin, char quote){
   return (end+1);
 }
 
+/*This function will skip C comments and 
+  returns the index of the first character
+  after the end of the comment*/
 int skipComments(char* string, int c1, int c2, char slash, char slash_or_star){
   int i = c2+1;
   int end;
+  //type of comment /*comment*/
   if(slash_or_star == '*'){
     while(string[i]!='*' && string[i+1]!='/'){
       i++;
     }
     end=i+2;
   }
-  /*  else if (slash_or_star=='/'){
-    while(string[i]!='\0' || string[i]!= '\n' || string[i]!='\f' || string[i]!='\r'){
+  //type of comment //comment with
+  //delimiter as end of string or new line character
+  else if (slash_or_star=='/'){
+    while(string[i]!='\0'){
+      if(string[i]=='\n'){
+	return i+1;
+      }
       i++;
     }
-    end=i+1;
-    }*/
+    end=-1;
+    }
   return end;
 }
 
@@ -799,6 +813,7 @@ char* currentstring;
 
 while(inputString[i]!='\0'){
 
+  //check for comments and function call to skip them
   if((inputString[i]=='/' && inputString[i+1]=='*') || (inputString[i]=='/' && inputString[i+1]=='/')){
     beginSubstringIndex = skipComments(inputString, i, i+1, inputString[i], inputString[i+1]);
     i = beginSubstringIndex;
