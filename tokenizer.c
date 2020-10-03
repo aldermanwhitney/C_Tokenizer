@@ -724,7 +724,7 @@ printf("\"%s\"\n", token->token_string);
 //printf("token length, i: %i\n", i);
 }
 
-/*This method is already written above
+//This method is already written above
 int getTokenInQuotes(char* string, int begin, char quote){
   int i=begin+1;
   int end;
@@ -736,9 +736,18 @@ int getTokenInQuotes(char* string, int begin, char quote){
   end=i;
 
   token = createSubstring(string,begin,end);
+
+  if(quote==\"){
+  struct Token *octal_token = createToken(token,Doublequote);
+  head = addTokentoLinkedList(octal_token);
+  }
+  if(quote==\'){
+  struct Token *octal_token = createToken(token,Doublequote);
+  head = addTokentoLinkedList(octal_token);
+  }
   return (end+1);
 }
-*/
+
 
 int main(int argc, char** argv){
 
@@ -768,10 +777,15 @@ char* currentstring;
 //iterate through input string char by char until the null terminator
 while(inputString[i]!='\0'){
 
+  if(inputString[1][i]=='\"' || inputString[1][i]=='\''){                                                                                                                               
+    i = getTokenInQuotes(argv[1], i, inputString[1][i]);                                                                                                                                 
+    beginSubstringIndex = i;
+  }
+  
 currentstring = createSubstring(inputString, beginSubstringIndex, i);
 
-/* if(argv[1][i]=='\"' || argv[1][i]=='\''){
-    i = getTokenInQuotes(argv[1], i, argv[1][i]);
+/* if(inputString[1][i]=='\"' || inputString[1][i]=='\''){
+    i = getTokenInQuotes(argv[1], i, inputString[1][i]);
     beginSubstringIndex = i;
     }*/ 
   if(Delimiter_present(inputString[i])==1){
