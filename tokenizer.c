@@ -4,7 +4,7 @@
 #include <string.h>
 
 
-enum token_type {Integer, Word, Hexadecimal, Octal, FloatingPoint, COperator, CKeyword};
+enum token_type {Integer, Word, Hexadecimal, Octal, FloatingPoint, COperator, CKeyword, SingleQuote, DoubleQuote};
 
 
 /*Function takes a token_type enum
@@ -22,6 +22,8 @@ switch(tt){
 	case 4: tokentype = "floating point"; break;
 	case 5: tokentype = "C operator"; break;
 	case 6: tokentype = "C keyword"; break;
+	case 7: tokentype = "single quote"; break;
+	case 8: tokentype = "double quote"; break;
 	default: return tokentype;
 } 
 return tokentype;
@@ -728,7 +730,7 @@ printf("\"%s\"\n", token->token_string);
 int getTokenInQuotes(char* string, int begin, char quote){
   int i=begin+1;
   int end;
-  //char* token;
+  char* token;
   
   while((string[i]!=quote)){
     i++;
@@ -737,13 +739,13 @@ int getTokenInQuotes(char* string, int begin, char quote){
 
   token = createSubstring(string,begin,end);
 
-  if(quote==\"){
-  struct Token *octal_token = createToken(token,Doublequote);
-  head = addTokentoLinkedList(octal_token);
+  if(quote=='\"'){
+  struct Token *single_quote_token = createToken(token,SingleQuote);
+  head = addTokentoLinkedList(single_quote_token);
   }
-  if(quote==\'){
-  struct Token *octal_token = createToken(token,Doublequote);
-  head = addTokentoLinkedList(octal_token);
+  if(quote=='\''){
+  struct Token *double_quote_token = createToken(token,DoubleQuote);
+  head = addTokentoLinkedList(double_quote_token);
   }
   return (end+1);
 }
@@ -758,13 +760,13 @@ if (argc!=2){
 
 //////TO TEST DIFFERENT INPUT STRING, COMMENT OUT THE FOLLOWING 3 LINES
 //Copies string from argv[1] into inputstring
-int size_input_string = strlen(argv[1]);
-char *inputString = malloc(sizeof(char)*(size_input_string)+1);
-strncpy(inputString, argv[1], size_input_string+1);
+//int size_input_string = strlen(argv[1]);
+//char *inputString = malloc(sizeof(char)*(size_input_string)+1);
+//strncpy(inputString, argv[1], size_input_string+1);
 /////
 
 ////////TO TEST DIFFERENT INPUTSTRINGS, UNCOMMENT THIS SINGLE LINE WITH YOUR INPUT
-//char inputString[] = "123\ntest";
+char inputString[] = "123\"t\"est";
 ///////
 
 
@@ -775,14 +777,17 @@ int i = 0;
 int beginSubstringIndex = 0;
 char* currentstring;
 //iterate through input string char by char until the null terminator
+currentstring = createSubstring(inputString, beginSubstringIndex, i);
+
 while(inputString[i]!='\0'){
 
-  if(inputString[1][i]=='\"' || inputString[1][i]=='\''){                                                                                                                               
-    i = getTokenInQuotes(argv[1], i, inputString[1][i]);                                                                                                                                 
+  if(inputString[i]=='\"' || inputString[i]=='\''){                                                                                                                               
+    i = getTokenInQuotes(inputString, i, inputString[i]);                                                                                                                                 
     beginSubstringIndex = i;
+   // continue;
   }
   
-currentstring = createSubstring(inputString, beginSubstringIndex, i);
+//currentstring = createSubstring(inputString, beginSubstringIndex, i);
 
 /* if(inputString[1][i]=='\"' || inputString[1][i]=='\''){
     i = getTokenInQuotes(argv[1], i, inputString[1][i]);
@@ -877,7 +882,7 @@ i++;
 printToken(head);
 
 
-free(inputString);
+//free(inputString);
 free(currentstring);
 freeLinkedList(head);	
 return 0;
