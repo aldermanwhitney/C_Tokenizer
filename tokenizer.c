@@ -304,7 +304,8 @@ while (string[i]!='\0'){
 
 
 //Function iterates through string to determine              
-//whether it is an int                                                                                                                                //Returns 0 for false or 1 for true                                                                                                                                                      
+//whether it is an
+//Returns 0 for false or 1 for true                                                                                                                                                      
 int isInt(char *string){
 int i = 0;
  if(isOctal(string)){
@@ -750,6 +751,23 @@ int getTokenInQuotes(char* string, int begin, char quote){
   return (end+1);
 }
 
+int skipComments(char* string, int c1, int c2, char slash, char slash_or_star){
+  int i = c2+1;
+  int end;
+  if(slash_or_star == '*'){
+    while(string[i]!='*' && string[i+1]!='/'){
+      i++;
+    }
+    end=i+2;
+  }
+  /*  else if (slash_or_star=='/'){
+    while(string[i]!='\0' || string[i]!= '\n' || string[i]!='\f' || string[i]!='\r'){
+      i++;
+    }
+    end=i+1;
+    }*/
+  return end;
+}
 
 int main(int argc, char** argv){
 
@@ -766,7 +784,7 @@ if (argc!=2){
 /////
 
 ////////TO TEST DIFFERENT INPUTSTRINGS, UNCOMMENT THIS SINGLE LINE WITH YOUR INPUT
-char inputString[] = "123\"t\"est";
+ char inputString[] = "123 //paxton \n test passed";
 ///////
 
 
@@ -777,31 +795,29 @@ int i = 0;
 int beginSubstringIndex = 0;
 char* currentstring;
 //iterate through input string char by char until the null terminator
-currentstring = createSubstring(inputString, beginSubstringIndex, i);
+//currentstring = createSubstring(inputString, beginSubstringIndex, i);
 
 while(inputString[i]!='\0'){
 
+  if((inputString[i]=='/' && inputString[i+1]=='*') || (inputString[i]=='/' && inputString[i+1]=='/')){
+    beginSubstringIndex = skipComments(inputString, i, i+1, inputString[i], inputString[i+1]);
+    i = beginSubstringIndex;
+  }
   if(inputString[i]=='\"' || inputString[i]=='\''){                                                                                                                               
-    i = getTokenInQuotes(inputString, i, inputString[i]);                                                                                                                                 
-    beginSubstringIndex = i;
+    beginSubstringIndex = getTokenInQuotes(inputString, i, inputString[i]);                                                                                                                                 
+    i = beginSubstringIndex;
    // continue;
   }
   
-//currentstring = createSubstring(inputString, beginSubstringIndex, i);
-
-/* if(inputString[1][i]=='\"' || inputString[1][i]=='\''){
-    i = getTokenInQuotes(argv[1], i, inputString[1][i]);
-    beginSubstringIndex = i;
-    }*/ 
+ currentstring = createSubstring(inputString, beginSubstringIndex, i);
+ 
   if(Delimiter_present(inputString[i])==1){
   i++;
   beginSubstringIndex++;
   continue;
   }
 
- if(inputString[i]=='\\'){
-   printf("found back slash");
- } 
+
 
 //save old head pointer
  struct Token* oldhead = head;
