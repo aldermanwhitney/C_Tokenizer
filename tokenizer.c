@@ -792,13 +792,13 @@ if (argc!=2){
 
 //////TO TEST DIFFERENT INPUT STRING, COMMENT OUT THE FOLLOWING 3 LINES
 //Copies string from argv[1] into inputstring
-//int size_input_string = strlen(argv[1]);
-//char *inputString = malloc(sizeof(char)*(size_input_string)+1);
-//strncpy(inputString, argv[1], size_input_string+1);
+int size_input_string = strlen(argv[1]);
+char *inputString = malloc(sizeof(char)*(size_input_string)+1);
+strncpy(inputString, argv[1], size_input_string+1);
 /////
 
 ////////TO TEST DIFFERENT INPUTSTRINGS, UNCOMMENT THIS SINGLE LINE WITH YOUR INPUT
- char inputString[] = "123.07 /*commennt*/ \'passed \' \"gotit yes\" 123abc567.097e-56b 079 0 0x 0xdest +++ <==!= ";
+// char inputString[] = "123.07 /*commennt*/ \'passed \' \"gotit yes\" 123abc567.097e-56b 079 0 0x 0xdest +++ <==!= ";
 ///////
 
 
@@ -852,7 +852,7 @@ while(inputString[i]!='\0'){
  currentstring = createSubstring(inputString, beginSubstringIndex, i);
  
   if(Delimiter_present(inputString[i])==1){
-  puts("delimiter");
+    //  puts("delimiter");
   i++;
   beginSubstringIndex++;
   continue;
