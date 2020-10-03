@@ -625,7 +625,6 @@ return 0;
 return 0;
 }
 
-
 /**This function returns a pointer to a newly malloc'ed char array
  *Given a string, and the beginning and ending indexes you want a substring of
  */
@@ -640,7 +639,7 @@ result[j] = string[i];
 j++;	
 }
 
-printf("Substring: %s\n", result);
+//printf("Substring: %s\n", result);
 return result;
 }
 
@@ -656,32 +655,32 @@ struct Token* add_viable_tokens_to_linkedlist(char* currentstring){
 //And that is the only one we need
 //Current precedence is order of if statements - word,int,float,hex,octal,c operator
 if (isWord(currentstring)){
-puts("found word");
+//puts("found word");
 struct Token *word_token = createToken(currentstring, Word);
 head = addTokentoLinkedList(word_token);
 }
 if(isCKeyword(currentstring)){
-puts("found C Keyword");
+//puts("found C Keyword");
 struct Token *c_keyword_token = createToken(currentstring, CKeyword);
 head = addTokentoLinkedList(c_keyword_token);
 }
 if(isInt(currentstring)){
-puts("found int");
+//puts("found int");
 struct Token *int_token = createToken(currentstring, Integer);
 head = addTokentoLinkedList(int_token);
 }
 if(isFloat(currentstring)){
-puts("found float");
+//puts("found float");
 struct Token *float_token = createToken(currentstring, FloatingPoint);
 head = addTokentoLinkedList(float_token);
 }
 if(isHex(currentstring)){
-puts("found hex");
+//puts("found hex");
 struct Token *hex_token = createToken(currentstring, Hexadecimal);
 head = addTokentoLinkedList(hex_token);
 }
 if (isOctal(currentstring)){
-puts("found octal");
+//puts("found octal");
 struct Token *octal_token = createToken(currentstring, Octal);
 head = addTokentoLinkedList(octal_token);
 }
@@ -691,7 +690,7 @@ char *str = isC_Operator(currentstring);
 
 //If the string returned is not empty, we have found a string operator
 if(strlen(str)!=0){
-printf("found C Operator: %s\n", str);
+//printf("found C Operator: %s\n", str);
 //coperator = 1;
 
 struct Token *c_operator_token = createToken(currentstring, COperator);
@@ -727,7 +726,6 @@ printf("\"%s\"\n", token->token_string);
 //printf("token length, i: %i\n", i);
 }
 
-//This method is already written above
 int getTokenInQuotes(char* string, int begin, char quote){
   int i=begin+1;
   int end;
@@ -740,11 +738,11 @@ int getTokenInQuotes(char* string, int begin, char quote){
 
   token = createSubstring(string,begin,end);
 
-  if(quote=='\"'){
+  if(quote=='\''){
   struct Token *single_quote_token = createToken(token,SingleQuote);
   head = addTokentoLinkedList(single_quote_token);
   }
-  if(quote=='\''){
+  if(quote=='\"'){
   struct Token *double_quote_token = createToken(token,DoubleQuote);
   head = addTokentoLinkedList(double_quote_token);
   }
@@ -784,7 +782,7 @@ if (argc!=2){
 /////
 
 ////////TO TEST DIFFERENT INPUTSTRINGS, UNCOMMENT THIS SINGLE LINE WITH YOUR INPUT
- char inputString[] = "123 //paxton \n test passed";
+char inputString[] = "123.\"pass\"ed";
 ///////
 
 
@@ -799,19 +797,33 @@ char* currentstring;
 
 while(inputString[i]!='\0'){
 
-  if((inputString[i]=='/' && inputString[i+1]=='*') || (inputString[i]=='/' && inputString[i+1]=='/')){
-    beginSubstringIndex = skipComments(inputString, i, i+1, inputString[i], inputString[i+1]);
+//  if((inputString[i]=='/' && inputString[i+1]=='*') || (inputString[i]=='/' && inputString[i+1]=='/')){
+//    beginSubstringIndex = skipComments(inputString, i, i+1, inputString[i], inputString[i+1]);
+//    i = beginSubstringIndex;
+//  }
+
+  
+if(inputString[i]=='\"' || inputString[i]=='\''){ 
+    
+    //must print previous token before updating
+    printToken(head);	
+    beginSubstringIndex = getTokenInQuotes(inputString, i, inputString[i]);
     i = beginSubstringIndex;
+
+    //print quote token
+    printToken(head);
+   // puts("quotes detected");
+
+    //need to skip over rest of code, where it checks oldhead etc
+    i++;
+    continue;
   }
-  if(inputString[i]=='\"' || inputString[i]=='\''){                                                                                                                               
-    beginSubstringIndex = getTokenInQuotes(inputString, i, inputString[i]);                                                                                                                                 
-    i = beginSubstringIndex;
-   // continue;
-  }
+  
   
  currentstring = createSubstring(inputString, beginSubstringIndex, i);
  
   if(Delimiter_present(inputString[i])==1){
+  puts("delimiter present");
   i++;
   beginSubstringIndex++;
   continue;
@@ -840,50 +852,50 @@ head = add_viable_tokens_to_linkedlist(currentstring);
 //2 - The largest token is the previously found token
 
 if (oldhead==head){
-puts("reached untokenizeable token");
+//puts("reached untokenizeable token");
 
 //Case 1 Check - Next token may qualify
 
 //Check for case 1 - float
 if (isPossibleFloat(currentstring) && (inputString[i+1]!='\0')){
-puts("can possibly be float - checking next index..");
+//puts("can possibly be float - checking next index..");
 
 char *possible_float = malloc(sizeof(char)*(i-beginSubstringIndex+2));
 possible_float = createSubstring(inputString, beginSubstringIndex, i+1);
 
 if (isFloat(possible_float)){
-puts("next token will be float, continue iterations as normal");
+//puts("next token will be float, continue iterations as normal");
 i++;
 free(possible_float);
 continue;
 }
 else{
-puts("next value will not be a float");
+//puts("next value will not be a float");
 }
 free(possible_float);
 }
 
 //Check for case 1 - hex
 if (isPossibleHex(currentstring) && (inputString[i+1]!='\0')){
-puts("can possibly be hex - checking next index..");
+//puts("can possibly be hex - checking next index..");
 
 char *possible_hex = malloc(sizeof(char)*(i-beginSubstringIndex+2));
 possible_hex = createSubstring(inputString, beginSubstringIndex, i+1);
 
 if (isHex(possible_hex)){
-puts("next token will be hex, continue iterations as normal");
+//puts("next token will be hex, continue iterations as normal");
 i++;
 free(possible_hex);
 continue;
 }
 else{
-puts("next token will not be hex");
+//puts("next token will not be hex");
 }
 free(possible_hex);
 }
 
 //Case 2 - Tokenize previous token
-puts("Reached a non token, tokenizing previous token");
+//puts("Reached a non token, tokenizing previous token");
 printToken(head);
 
 //resets begin substring pointer to first char after the token
