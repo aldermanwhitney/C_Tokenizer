@@ -138,7 +138,7 @@ return 0;
   while(string[i]!='\0'){
      //if its not an alphabet from a-f & A-F then check its a digit, if not then return false                                                                                        
     if(isxdigit(string[i])==0){
-      printf("end of hex\n");
+      // printf("end of hex\n");
       return 0;
     }
   
@@ -166,7 +166,7 @@ int isPossibleHex(char *string){
   while(string[i]!='\0'){
      //if its not an alphabet from a-f & A-F then check its a digit, if not then return false                                                                                
     if(isxdigit(string[i])==0){
-      printf("end of hex\n");
+      //      printf("end of hex\n");
       return 0;
     }
   
@@ -798,7 +798,7 @@ if (argc!=2){
 /////
 
 ////////TO TEST DIFFERENT INPUTSTRINGS, UNCOMMENT THIS SINGLE LINE WITH YOUR INPUT
-char inputString[] = "123.\"pass\"ed";
+ char inputString[] = "123.07 /*commennt*/ \'passed \' \"gotit yes\" 123abc567.097e-56b 079 0 0x 0xdest +++ <==!= ";
 ///////
 
 
@@ -810,18 +810,24 @@ int beginSubstringIndex = 0;
 char* currentstring;
 //iterate through input string char by char until the null terminator
 //currentstring = createSubstring(inputString, beginSubstringIndex, i);
-
+ int quote_present = 0;
 while(inputString[i]!='\0'){
 
   //check for comments and function call to skip them
   if((inputString[i]=='/' && inputString[i+1]=='*') || (inputString[i]=='/' && inputString[i+1]=='/')){
     beginSubstringIndex = skipComments(inputString, i, i+1, inputString[i], inputString[i+1]);
     i = beginSubstringIndex;
-  }                            
+    if(i==-1) {
+    return 0;
+    }
+    else{
+      continue;
+    }
+    }                       
 
   
-if(inputString[i]=='\"' || inputString[i]=='\''){ 
-    
+  if((inputString[i]=='\"' || inputString[i]=='\'')){ 
+    if(quote_present%2==0){
     //must print previous token before updating
     printToken(head);	
     beginSubstringIndex = getTokenInQuotes(inputString, i, inputString[i]);
@@ -829,18 +835,24 @@ if(inputString[i]=='\"' || inputString[i]=='\''){
 
     //print quote token
     printToken(head);
-   // puts("quotes detected");
+    // puts("quotes detected");
 
     //need to skip over rest of code, where it checks oldhead etc
     i++;
+    quote_present++;
+    printf("value of quotes: %d\n", quote_present);
     continue;
+    }
+    else{
+      quote_present++;
+    }
   }
   
   
  currentstring = createSubstring(inputString, beginSubstringIndex, i);
  
   if(Delimiter_present(inputString[i])==1){
-  puts("delimiter present");
+  puts("delimiter");
   i++;
   beginSubstringIndex++;
   continue;
