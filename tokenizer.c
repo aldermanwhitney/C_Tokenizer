@@ -412,9 +412,9 @@ switch(string[i]) {
 	case '*':
 		c_op = "multiply/dereference operator";
 		return c_op;
-        //case '%':
-          //      c_op="mod";
-            //    return c_op;
+        case '%':
+                c_op="mod";
+                return c_op;
         default:
 		//c_operator_struct->operator_length=0;
 		return c_op;
@@ -833,7 +833,6 @@ char* currentstring;
  int quote_present = 0;
 while(inputString[i]!='\0'){
 	
-	//struct Token* oldhead = head;
   //check for comments and function call to skip them
   if((inputString[i]=='/' && inputString[i+1]=='*') || (inputString[i]=='/' && inputString[i+1]=='/')){
     if(head!=NULL) {
@@ -852,13 +851,12 @@ while(inputString[i]!='\0'){
       continue;
     }
     }                       
-  
+
+//check for quotes  
   if((inputString[i]=='\"' || inputString[i]=='\'')){ 
     if(quote_present%2==0){
-    //must print previous token before updating
-      //      puts("printing oldhead before quotes token");
-
-
+   
+//must print previous token before updating
       if(head!=NULL){
 	if(head->alreadyPrinted==0){
 	printToken(head);
@@ -871,23 +869,20 @@ while(inputString[i]!='\0'){
     //print quote token
     printToken(head);
     head->alreadyPrinted=1;
-    // puts("quotes detected");
-
-    //need to skip over rest of code, where it checks oldhead etc
-     //    i++;
     quote_present++;
-    //printf("value of quotes: %d\n", quote_present);
+
     continue;
     }
     else{
       quote_present++;
     }
   }
-  
+
+//copy a substring of the input we are examining  
  currentstring = createSubstring(inputString, beginSubstringIndex, i);
  
+ //delimiter check
   if(Delimiter_present(inputString[i])==1){
-  //puts("delimiter");
   i++;
   beginSubstringIndex++;
   continue;
@@ -901,10 +896,9 @@ while(inputString[i]!='\0'){
         head->alreadyPrinted=1;
       }
      }
-      // printf("non token index at %d\n", i);
+      
     beginSubstringIndex=i+1;
     i+=1;
-    //printf("restart at %d\n", i);
     continue;
     }
 
@@ -915,66 +909,43 @@ struct Token* oldhead = head;
 //and adds these tokens to a linked list and updates head
 head = add_viable_tokens_to_linkedlist(currentstring);
 
-//reached the end of the string
-//if(argv[1][i+1]=='\0'){	  
-//puts("reached the end of the string, tokenizing rest of the token");
-//printTokenFromLinkedListHead();
-//return 0;
-//}
-
-//The head returned is the same as before
+//The linked list head returned is the same as before
 //therefore no new tokens have been found in this iteration
 //One of two things may happen
 //1 - We have reached a substring that is not currently a token, but may be if given one more iteration (ie 123.)
 //2 - The largest token is the previously found token
-
 if (oldhead==head){
-  //puts("reached untokenizeable token");
 
 //Case 1 Check - Next token may qualify
-
 //Check for case 1 - float
 if (isPossibleFloat(currentstring) && (inputString[i+1]!='\0')){
-  //puts("can possibly be float - checking next index..");
 
 char *possible_float = malloc(sizeof(char)*(i-beginSubstringIndex+2));
 possible_float = createSubstring(inputString, beginSubstringIndex, i+1);
 
 if (isFloat(possible_float)){
-  //puts("next token will be float, continue iterations as normal");
 i++;
 free(possible_float);
 continue;
-}
-else{
-  //puts("next value will not be a float");
 }
 free(possible_float);
 }
 
 //Check for case 1 - hex
 if (isPossibleHex(currentstring) && (inputString[i+1]!='\0')){
-  //puts("can possibly be hex - checking next index..");
 
 char *possible_hex = malloc(sizeof(char)*(i-beginSubstringIndex+2));
 possible_hex = createSubstring(inputString, beginSubstringIndex, i+1);
 
 if (isHex(possible_hex)){
-  //puts("next token will be hex, continue iterations as normal");
 i++;
 free(possible_hex);
 continue;
-}
-else{
-  //puts("next token will not be hex");
 }
 free(possible_hex);
 }
 
 //Case 2 - Tokenize previous token
-//puts("Reached a non token, tokenizing previous token");
-
-
  if(head!=NULL){
  if(head->alreadyPrinted==0){
  printToken(head);
@@ -990,9 +961,7 @@ continue;
 i++;
 }
 
-
-// puts("printing last head");
-
+//print last token
  if(head!=NULL){
    if(head->alreadyPrinted==0){
    printToken(head);
@@ -1000,14 +969,12 @@ i++;
    }
  }
 
+//free all malloced memory
 if(inputString!=NULL){
 free(inputString);}
 if(currentstring!=NULL){
 free(currentstring);}
 if(head!=NULL){
 freeLinkedList(head);}
-//free(inputString);
-//free(currentstring);
-//freeLinkedList(head);	
 return 0;
 }
