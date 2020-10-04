@@ -213,10 +213,7 @@ int e = 0;
 	while (string[i]!='\0'){
 		
 		char c = string[i]-'0';
-		if(i==0 && string[i] == '-'){
-		  i++;
-		  continue;
-		}
+	     
 		//If character has a decimal, must only have one                                                                                       
                 //And must not be at first or last index                                                                                               
                 if ((string[i]=='.')&&(i!=strlen(string)-1) &&(i!=0)){
@@ -283,10 +280,6 @@ int t = 0;
 while (string[i]!='\0'){
   //converts char to int
   int c = string[i]-'0';
-  if(i==0 && string[i] == '-'){
-  i++;
-  continue;
-  }
   //reached a non int                                                                                                                   
   if (c<0 || c>9){
     if(i>0 && string[i]==46 && t==0){
@@ -324,10 +317,6 @@ int i = 0;
 while (string[i]!='\0'){
 //converts char to int                                                                                                                                                                   
 int c = string[i]-'0';
-  if(i==0 && string[i] == '-'){
-  i++;
-  continue;
-  }
 //reached a non int                                                                                                                                                                      
 if (c<0 || c>9){
   return 0;
