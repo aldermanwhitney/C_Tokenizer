@@ -1,7 +1,9 @@
 Input String followed by Output:
+Note: input containing backslashes and quotes were tested directly in the program, not on the commandline.
 
 1)
 "happy rt56 34.06e-10 5.67e12 0 97 765 0x 0xfegh"
+
 word: "happy"
 word: "rt56"
 floating point: "34.06e-10"
@@ -17,6 +19,7 @@ word: "gh"
 
 2)
 "abc123.97 abc0Xabfstring df076 ran*dom"
+
 word: "abc123"
 structure member: "."
 decimal integer: "97"
@@ -28,6 +31,7 @@ word: "dom"
 
 3)
 "970x45ef 012 0.124 012.45 3^5"
+
 decimal integer: "970"
 word: "x45ef"
 octal integer: "012"
@@ -39,6 +43,7 @@ decimal integer: "5"
 
 4)
 "123.07 /*commennt*/ \'passed\' \"gotit yes\" 123abc567.097e-56b 079 0 0x 0xdest +++ <==!= "
+
 floating point: "123.07"
 single quote: "'passed'"
 double quote: ""gotit yes""
@@ -63,24 +68,28 @@ inequality test: "!="
 
 5)
 "0xabcdef12.76e^-70x^-="
-hexadecimal integer: "0xabcdef12"
-structure member: "."
-decimal integer: "76"
-word: "e"
-bitwise XOR: "^"
-decimal integer: "-70"
-word: "x"
-bitwise XOR: "^"
-minus equals: "-="
+
+hexadecimal integer: "0xabcdef12"                                      
+structure member: "."                                                                  
+decimal integer: "76"                                                                  
+word: "e"                                                                              
+bitwise XOR: "^"                                                                       
+minus/subtract operator: "-"                                                           
+decimal integer: "70"                                                                  
+word: "x"                                                                              
+bitwise XOR: "^"                                                                       
+minus equals: "-="  
 
 6)
 "076 076.05 76"
+
 octal integer: "076"
 floating point: "076.05"
 decimal integer: "76"
 
 7)
 "34.45 34.45e-10 34.45e23 34.45e+9 34.e"
+
 floating point: "34.45"
 floating point: "34.45e-10"
 floating point: "34.45e23"
@@ -91,6 +100,7 @@ word: "e"
 
 8)
 ".23 45. 0.23 45.0"
+
 structure member: "."
 decimal integer: "23"
 decimal integer: "45"
@@ -100,12 +110,14 @@ floating point: "45.0"
 
 9)
 "today is a //good day"
+
 word: "today"
 word: "is"
 word: "a"
 
 10)
 "today is a /*good day*/ okay"
+
 word: "today"
 word: "is"
 word: "a"
@@ -113,6 +125,7 @@ word: "okay"
 
 11)
 "today is a \n \"good\" \t \'day\'"
+
 word: "today"
 word: "is"
 word: "a"
@@ -121,6 +134,7 @@ single quote: "'day'"
 
 12)
 "rest45 int enum float CKeywords"
+
 word: "rest45"
 C keyword: "int"
 C keyword: "enum"
@@ -129,16 +143,19 @@ word: "CKeywords"
 
 13)
 "comments //go till new line \n done"
+
 word: "comments"
 word: "done"
 
 14)
 "sizeofabcd abcdsizeof"
+
 word: "sizeofabcd"
 word: "abcdsizeof"
 
 15)
 "trying quotes with escapes \"\t\n\" \'\t\n\v\' /* \t\n*/ end"
+
 word: "trying"
 word: "quotes"
 word: "with"
@@ -152,6 +169,7 @@ word: "end"
 
 16)
 "dog23\rsizeofabc\fcat\t\"gdf\" \'cd\' //good\n /*dg*/ done\n12.e3,,,+++-=-=-- enum"
+
 word: "dog23"
 word: "sizeofabc"
 word: "cat"
@@ -173,10 +191,12 @@ C keyword: "enum"
 
 17)
 ""
+
 Empty string input, no tokens
 
 18)
 "+,++,+++,++++,+++++,++=,+++==/ 0x-123"
+
 addition: "+"
 comma: ","
 increment: "++"
@@ -200,11 +220,13 @@ assignment: "="
 division: "/"
 octal integer: "0"
 word: "x"
-decimal integer: "-123"
+minus/subtract operator: "-"
+decimal integer: "123" 
 
 
 19)
 "numbers 972 0x972 A8 0XA8 XA9 0982 072"
+
 word: "numbers"
 decimal integer: "972"
 hexadecimal integer: "0x972"
@@ -217,45 +239,42 @@ octal integer: "072"
 
 20)
 "0Xx 0X1231488927"
+
 octal integer: "0"
 word: "Xx"
 hexadecimal integer: "0X1231488927"
 
 21)
 "AAAA%08x.%04x.%05x.%=06x.%08x.%08x.%/09x.%=08x"
+note: mod operator is not explicited listed in C operators, so it is skipped over.
+
 word: "AAAA"
-mod: "%"
 decimal integer: "08"
-word: "x"
+word: "x"            
 structure member: "."
-mod: "%"
 octal integer: "04"
 word: "x"
 structure member: "."
-mod: "%"
 octal integer: "05"
 word: "x"
 structure member: "."
-mod equals: "%="
+assignment: "="
 octal integer: "06"
 word: "x"
 structure member: "."
-mod: "%"
+decimal integer: "08"
+word: "x"            
+structure member: "."
 decimal integer: "08"
 word: "x"
 structure member: "."
-mod: "%"
-decimal integer: "08"
-word: "x"
-structure member: "."
-mod: "%"
 division: "/"
 decimal integer: "09"
 word: "x"
 structure member: "."
-mod equals: "%="
+assignment: "="
 decimal integer: "08"
-word: "x"
+word: "x"       
 
 22)
 "0X0x01789..."
