@@ -66,6 +66,9 @@ return head;
 //and return a pointer to a newly malloc'ed struct token 
 struct Token* createToken(char *token_string, enum token_type tt){
 struct Token *token = malloc(sizeof(struct Token));
+if(token==NULL){
+printf("memory allocation failed");
+}
 token->token_string = token_string;
 token->token_type = tt;
  token->alreadyPrinted=0;
@@ -94,9 +97,9 @@ free(head);
 
 
 /*This function, given a string
-checks if its a word that is,
+checks if its a word. That is,
 it starts with an alphabet 
-and is allowed to have alphanumeric characters
+and is allowed to only have alphanumeric characters
 following the first alphabet
 return 1 for true, 0 for false */
 int isWord(char *string){
@@ -109,7 +112,6 @@ int isWord(char *string){
     //checks if the following character are alphanumeric
     //if a non-alphanumeric character is found then loop terminates to end the token there
     if(isalnum(string[i])==0){
-      //printf("end of word");
       return 0;
     }
     i++;
@@ -118,7 +120,7 @@ int isWord(char *string){
 }
 
 /*This function, given a string
-check if the string as it stands a hexadecimal integer
+checks if the string as it stands is a hexadecimal integer
 Returns 1 for true, 0 for false*/
 int isHex(char* string){
  
@@ -140,7 +142,6 @@ return 0;
   while(string[i]!='\0'){
      //if its not an alphabet from a-f & A-F then check its a digit, if not then return false                                                                                        
     if(isxdigit(string[i])==0){
-      // printf("end of hex\n");
       return 0;
     }
   
@@ -151,7 +152,7 @@ return 0;
 
 
 /*This function, given a string
-check if it could possibly be a hex
+check if it could possibly be a hex provided the next character is correct, ie 0x
 returns 1 for true and 0 for false*/
 int isPossibleHex(char *string){
   //if first character is not zero then return false                                                                                                                                     
@@ -251,7 +252,7 @@ return 1;
 
 
 /**Function is given a string
- * and returns a boolean if the string could possibly
+ * and returns true (1) or false (0) if the string could possibly
  * be a float on the next iteration
  *ie 436. or 117.
  */
@@ -262,8 +263,6 @@ int t = 0;
  int e=0;
  int negative=0;
 
- //just added this line for compilation - compiler says negative is initialized but never used
- //and i dont see when you do anything with it other than set it to 0 or 1
  if (negative){
 
 }
@@ -289,7 +288,6 @@ while (string[i]!='\0'){
     else if( e==0 && t==1 && (string[i]==69 || string[i]==101)){
       e=i;
       // printf("found e");
-      //      continue;
     }
     else if(e==(i-1) && t==1 && (string[i]==45 || string[i]==43)){
       negative=1;
@@ -308,16 +306,18 @@ while (string[i]!='\0'){
 
 //Function iterates through string to determine              
 //whether it is a decimal integer
-//Returns 0 for false or 1 for true                                                                                                                                                      
+//Returns 0 for false or 1 for true 
 int isInt(char *string){
 int i = 0;
  if(isOctal(string)){
    return 1;
  }
 while (string[i]!='\0'){
-//converts char to int                                                                                                                                                                   
+
+//converts char to int                                                                                                                               
 int c = string[i]-'0';
-//reached a non int                                                                                                                                                                      
+
+//reached a non int                                                                                                                                                     
 if (c<0 || c>9){
   return 0;
 }
@@ -336,19 +336,13 @@ return 1;
 char* isC_Operator(char *string){
 
 char *c_op = malloc(sizeof(char)*50);	
-
-//struct C_Operator *c_operator_struct = malloc(sizeof(struct C_Operator));
-//c_operator_struct->operator_length=0;
-//c_operator_struct->operator_name="";
+if(c_op==NULL){
+printf("memory allocation failed");
+}
 
 c_op = "";
 
 int i = 0;	
-//char c = string[0];
-
-//printf("ignore: %s\n", c_op);
-//printf("%c\n", c);
-
 
 //if the string is length one, choose from possible operators
 if (strlen(string)==1){
