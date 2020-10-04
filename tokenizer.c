@@ -832,7 +832,8 @@ char* currentstring;
 //currentstring = createSubstring(inputString, beginSubstringIndex, i);
  int quote_present = 0;
 while(inputString[i]!='\0'){
-  //struct Token* oldhead = head;
+	
+	//struct Token* oldhead = head;
   //check for comments and function call to skip them
   if((inputString[i]=='/' && inputString[i+1]=='*') || (inputString[i]=='/' && inputString[i+1]=='/')){
     if(head!=NULL) {
@@ -886,7 +887,7 @@ while(inputString[i]!='\0'){
  currentstring = createSubstring(inputString, beginSubstringIndex, i);
  
   if(Delimiter_present(inputString[i])==1){
-    //  puts("delimiter");
+  //puts("delimiter");
   i++;
   beginSubstringIndex++;
   continue;
@@ -999,8 +1000,14 @@ i++;
    }
  }
 
+if(inputString!=NULL){
+free(inputString);}
+if(currentstring!=NULL){
+free(currentstring);}
+if(head!=NULL){
+freeLinkedList(head);}
 //free(inputString);
-free(currentstring);
-freeLinkedList(head);	
+//free(currentstring);
+//freeLinkedList(head);	
 return 0;
 }
