@@ -311,3 +311,38 @@ word: "is"
 C keyword: "while"
 bitwise XOR: "^"
 AND/address operator: "&"
+
+27)
+"afsgb #hdgdg 124.85 <=++++,.s53b%0xX0Xxeuy"
+word: "afsgb"
+word: "hdgdg"
+floating point: "124.85"
+less than or equal test: "<="
+increment: "++"
+increment: "++"
+comma: ","
+structure member: "."
+word: "s53b"
+mod: "%"
+octal integer: "0"
+word: "xX0Xxeuy"
+
+28)
+"trying \"quotes\" with # and \$mean\$okay"
+word: "trying"
+double quote: ""quotes""
+word: "with"
+word: "and"
+word: "mean"
+word: "okay"
+
+29)
+"/*skipping this*/\\\"quote this"\"
+double quote: ""quote this""
+
+30)"non tokens \$\$ #@ are skipped \!"
+word: "non"
+word: "tokens"
+word: "are"
+word: "skipped"
+negate: "!"

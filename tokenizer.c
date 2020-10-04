@@ -820,7 +820,7 @@ strncpy(inputString, argv[1], size_input_string+1);
 /////
 
 ////////TO TEST DIFFERENT INPUTSTRINGS, UNCOMMENT THIS SINGLE LINE WITH YOUR INPUT
-// char inputString[] = "dog23\rsizeof\"gdf\" %= ()[]";
+// char inputString[] = "abc /* api */";
 ///////
 
  if(strlen(inputString)==0){
@@ -857,7 +857,6 @@ while(inputString[i]!='\0'){
       continue;
     }
     }                       
-
   
   if((inputString[i]=='\"' || inputString[i]=='\'')){ 
     if(quote_present%2==0){
