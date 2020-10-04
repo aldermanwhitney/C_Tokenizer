@@ -412,9 +412,9 @@ switch(string[i]) {
 	case '*':
 		c_op = "multiply/dereference operator";
 		return c_op;
-        case '%':
-                c_op="mod";
-                return c_op;
+        //case '%':
+          //      c_op="mod";
+            //    return c_op;
         default:
 		//c_operator_struct->operator_length=0;
 		return c_op;
