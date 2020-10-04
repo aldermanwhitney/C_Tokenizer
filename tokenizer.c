@@ -211,7 +211,10 @@ int e = 0;
 	while (string[i]!='\0'){
 		
 		char c = string[i]-'0';
-
+		if(i==0 && string[i] == '-'){
+		  i++;
+		  continue;
+		}
 		//If character has a decimal, must only have one                                                                                       
                 //And must not be at first or last index                                                                                               
                 if ((string[i]=='.')&&(i!=strlen(string)-1) &&(i!=0)){
@@ -278,6 +281,10 @@ int t = 0;
 while (string[i]!='\0'){
   //converts char to int
   int c = string[i]-'0';
+  if(i==0 && string[i] == '-'){
+  i++;
+  continue;
+  }
   //reached a non int                                                                                                                   
   if (c<0 || c>9){
     if(i>0 && string[i]==46 && t==0){
@@ -315,7 +322,10 @@ int i = 0;
 while (string[i]!='\0'){
 //converts char to int                                                                                                                                                                   
 int c = string[i]-'0';
-
+  if(i==0 && string[i] == '-'){
+  i++;
+  continue;
+  }
 //reached a non int                                                                                                                                                                      
 if (c<0 || c>9){
   return 0;
@@ -829,13 +839,14 @@ while(inputString[i]!='\0'){
   if((inputString[i]=='\"' || inputString[i]=='\'')){ 
     if(quote_present%2==0){
     //must print previous token before updating
+      puts("printing oldhead before quotes token");
     printToken(head);	
     beginSubstringIndex = getTokenInQuotes(inputString, i, inputString[i]);
     i = beginSubstringIndex;
 
     //print quote token
     printToken(head);
-    // puts("quotes detected");
+     puts("quotes detected");
 
     //need to skip over rest of code, where it checks oldhead etc
     i++;
@@ -881,50 +892,50 @@ head = add_viable_tokens_to_linkedlist(currentstring);
 //2 - The largest token is the previously found token
 
 if (oldhead==head){
-//puts("reached untokenizeable token");
+puts("reached untokenizeable token");
 
 //Case 1 Check - Next token may qualify
 
 //Check for case 1 - float
 if (isPossibleFloat(currentstring) && (inputString[i+1]!='\0')){
-//puts("can possibly be float - checking next index..");
+puts("can possibly be float - checking next index..");
 
 char *possible_float = malloc(sizeof(char)*(i-beginSubstringIndex+2));
 possible_float = createSubstring(inputString, beginSubstringIndex, i+1);
 
 if (isFloat(possible_float)){
-//puts("next token will be float, continue iterations as normal");
+puts("next token will be float, continue iterations as normal");
 i++;
 free(possible_float);
 continue;
 }
 else{
-//puts("next value will not be a float");
+puts("next value will not be a float");
 }
 free(possible_float);
 }
 
 //Check for case 1 - hex
 if (isPossibleHex(currentstring) && (inputString[i+1]!='\0')){
-//puts("can possibly be hex - checking next index..");
+puts("can possibly be hex - checking next index..");
 
 char *possible_hex = malloc(sizeof(char)*(i-beginSubstringIndex+2));
 possible_hex = createSubstring(inputString, beginSubstringIndex, i+1);
 
 if (isHex(possible_hex)){
-//puts("next token will be hex, continue iterations as normal");
+puts("next token will be hex, continue iterations as normal");
 i++;
 free(possible_hex);
 continue;
 }
 else{
-//puts("next token will not be hex");
+puts("next token will not be hex");
 }
 free(possible_hex);
 }
 
 //Case 2 - Tokenize previous token
-//puts("Reached a non token, tokenizing previous token");
+puts("Reached a non token, tokenizing previous token");
 printToken(head);
 
 //resets begin substring pointer to first char after the token
@@ -936,6 +947,8 @@ continue;
 i++;
 }
 
+
+ puts("printing last head");
 printToken(head);
 
 
