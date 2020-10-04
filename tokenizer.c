@@ -828,9 +828,9 @@ strncpy(inputString, argv[1], size_input_string+1);
 int i = 0;
 int beginSubstringIndex = 0;
 char* currentstring;
-//iterate through input string char by char until the null terminator
-//currentstring = createSubstring(inputString, beginSubstringIndex, i);
- int quote_present = 0;
+int quote_present = 0;
+
+//iterate through the input string char by char until the null terminator
 while(inputString[i]!='\0'){
 	
   //check for comments and function call to skip them
