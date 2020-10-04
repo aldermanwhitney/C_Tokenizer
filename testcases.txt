@@ -1,9 +1,93 @@
-Input String followed by Output:
-Note: input containing backslashes and quotes were tested directly in the program, not on the commandline.
+Test Cases
+Note: Input containing backslashes and inner quotes (ie "tes"ti"ng") were tested directly in the program, not on the commandline.
 
-1)
-"happy rt56 34.06e-10 5.67e12 0 97 765 0x 0xfegh"
+1) Input: 123testing.* 
 
+Output:
+decimal integer: "123"
+word: "testing"
+structure member: "."
+multiply/dereference operator: "*"     
+
+2) Input: 0x71%=
+
+Output:
+hexadecimal integer: "0x71"
+mod equals: "%="                             
+
+3) Input:
+
+Output:
+Invalid number of arguments   
+
+4)
+Input: " "
+
+Output: None
+
+5) Input: "testing.0x71717!"               
+
+Output:
+word: "testing"
+structure member: "."
+hexadecimal integer: "0x71717"
+negate: "!"        
+
+6) Input: "fiV3/s1x"                       
+
+Output:
+word: "fiV3"
+division: "/"
+word: "s1x"                         
+
+7)Input: "fiV3//comment" 
+
+Output:
+word: "fiV3"                                       
+
+8) Input: "3429837498.37483923aBc123>>0x12345,,,++ testing some more reallylongstring.38438.4787lksjdcnskjfbdjskhfo874whfksjnfkjdkjy8e768347658%=[]*dhjd^^||0xFF0xGG9898 long input array[xyz] +=.543.6"
+
+Output:
+floating point: "3429837498.37483923"
+word: "aBc123"
+shift right: ">>"
+hexadecimal integer: "0x12345"
+comma: ","
+comma: ","
+comma: ","
+increment: "++"
+word: "testing"
+word: "some"
+word: "more"
+word: "reallylongstring"
+structure member: "."
+floating point: "38438.4787"
+word: "lksjdcnskjfbdjskhfo874whfksjnfkjdkjy8e768347658"
+mod equals: "%="
+left bracket: "["
+right bracket: "]"
+multiply/dereference operator: "*" 
+word: "dhjd"
+bitwise XOR: "^"
+bitwise XOR: "^" 
+logical OR: "||"
+hexadecimal integer: "0xFF0"
+word: "xGG9898"
+C keyword: "long"
+word: "input" 
+word: "array"
+left bracket: "["
+word: "xyz"
+right bracket: "]"
+plus equals: "+="
+structure member: "." 
+floating point: "543.6"
+
+
+9)
+Input: "happy rt56 34.06e-10 5.67e12 0 97 765 0x 0xfegh"
+
+Output:
 word: "happy"
 word: "rt56"
 floating point: "34.06e-10"
@@ -17,9 +101,10 @@ hexadecimal integer: "0xfe"
 word: "gh"
 
 
-2)
-"abc123.97 abc0Xabfstring df076 ran*dom"
+10)
+Input: "abc123.97 abc0Xabfstring df076 ran*dom"
 
+Output:
 word: "abc123"
 structure member: "."
 decimal integer: "97"
@@ -29,9 +114,10 @@ word: "ran"
 multiply/dereference operator: "*"
 word: "dom"
 
-3)
-"970x45ef 012 0.124 012.45 3^5"
+11)
+Input: "970x45ef 012 0.124 012.45 3^5"
 
+Output:
 decimal integer: "970"
 word: "x45ef"
 octal integer: "012"
@@ -41,34 +127,11 @@ decimal integer: "3"
 bitwise XOR: "^"
 decimal integer: "5"
 
-4)
-"123.07 /*commennt*/ \'passed\' \"gotit yes\" 123abc567.097e-56b 079 0 0x 0xdest +++ <==!= "
+12)
+Input: "0xabcdef12.76e^-70x^-="
 
-floating point: "123.07"
-single quote: "'passed'"
-double quote: ""gotit yes""
-decimal integer: "123"
-word: "abc567"
-structure member: "."
-decimal integer: "097"
-word: "e"
-decimal integer: "-56"
-word: "b"
-decimal integer: "079"
-octal integer: "0"
-octal integer: "0"
-word: "x"
-hexadecimal integer: "0xde"
-word: "st"
-increment: "++"
-addition: "+"
-less than or equal test: "<="
-assignment: "="
-inequality test: "!="
 
-5)
-"0xabcdef12.76e^-70x^-="
-
+Output:
 hexadecimal integer: "0xabcdef12"                                      
 structure member: "."                                                                  
 decimal integer: "76"                                                                  
@@ -80,16 +143,18 @@ word: "x"
 bitwise XOR: "^"                                                                       
 minus equals: "-="  
 
-6)
-"076 076.05 76"
+13)
+Input: "076 076.05 76"
 
+Output:
 octal integer: "076"
 floating point: "076.05"
 decimal integer: "76"
 
-7)
-"34.45 34.45e-10 34.45e23 34.45e+9 34.e"
+14)
+Input: "34.45 34.45e-10 34.45e23 34.45e+9 34.e"
 
+Output:
 floating point: "34.45"
 floating point: "34.45e-10"
 floating point: "34.45e23"
@@ -98,9 +163,10 @@ decimal integer: "34"
 structure member: "."
 word: "e"
 
-8)
-".23 45. 0.23 45.0"
+15)
+Input: ".23 45. 0.23 45.0"
 
+Output:
 structure member: "."
 decimal integer: "23"
 decimal integer: "45"
@@ -108,95 +174,51 @@ structure member: "."
 floating point: "0.23"
 floating point: "45.0"
 
-9)
-"today is a //good day"
+16)
+Input: "today is a //good day"
 
+Output:
 word: "today"
 word: "is"
 word: "a"
 
-10)
-"today is a /*good day*/ okay"
+17)
+Input: "today is a /*good day*/ okay"
 
+Output:
 word: "today"
 word: "is"
 word: "a"
 word: "okay"
 
-11)
-"today is a \n \"good\" \t \'day\'"
+18)
+Input: "rest45 int enum float CKeywords"
 
-word: "today"
-word: "is"
-word: "a"
-double quote: ""good""
-single quote: "'day'"
-
-12)
-"rest45 int enum float CKeywords"
-
+Output:
 word: "rest45"
 C keyword: "int"
 C keyword: "enum"
 C keyword: "float"
 word: "CKeywords"
 
-13)
-"comments //go till new line \n done"
+19)
+Input: "sizeofabcd abcdsizeof"
 
-word: "comments"
-word: "done"
-
-14)
-"sizeofabcd abcdsizeof"
-
+Output:
 word: "sizeofabcd"
 word: "abcdsizeof"
 
-15)
-"trying quotes with escapes \"\t\n\" \'\t\n\v\' /* \t\n*/ end"
 
-word: "trying"
-word: "quotes"
-word: "with"
-word: "escapes"
-double quote: ""	
-""
-single quote: "'	
+20)
+Input: ""
 
-'"
-word: "end"
-
-16)
-"dog23\rsizeofabc\fcat\t\"gdf\" \'cd\' //good\n /*dg*/ done\n12.e3,,,+++-=-=-- enum"
-
-word: "dog23"
-word: "sizeofabc"
-word: "cat"
-double quote: ""gdf""
-single quote: "'cd'"
-word: "done"
-decimal integer: "12"
-structure member: "."
-word: "e3"
-comma: ","
-comma: ","
-comma: ","
-increment: "++"
-addition: "+"
-minus equals: "-="
-minus equals: "-="
-decrement: "--"
-C keyword: "enum"
-
-17)
-""
-
+Output:
 Empty string input, no tokens
 
-18)
-"+,++,+++,++++,+++++,++=,+++==/ 0x-123"
+21)
+Input: "+,++,+++,++++,+++++,++=,+++==/ 0x-123"
 
+Output:
 addition: "+"
 comma: ","
 increment: "++"
@@ -224,8 +246,9 @@ minus/subtract operator: "-"
 decimal integer: "123" 
 
 
-19)
-"numbers 972 0x972 A8 0XA8 XA9 0982 072"
+Output:
+22)
+Input: "numbers 972 0x972 A8 0XA8 XA9 0982 072"
 
 word: "numbers"
 decimal integer: "972"
@@ -237,55 +260,66 @@ decimal integer: "0982"
 octal integer: "072"
 
 
-20)
-"0Xx 0X1231488927"
+23)
+Input: "0Xx 0X1231488927"
 
+Output:
 octal integer: "0"
 word: "Xx"
 hexadecimal integer: "0X1231488927"
 
-21)
-"AAAA%08x.%04x.%05x.%=06x.%08x.%08x.%/09x.%=08x"
-note: mod operator is not explicited listed in C operators, so it is skipped over.
+24)
+Input: "AAAA%08x.%04x.%05x.%=06x.%08x.%08x.%/09x.%=08x"
 
+Output:
 word: "AAAA"
+mod: "%"
 decimal integer: "08"
-word: "x"            
+word: "x"
 structure member: "."
+mod: "%"
 octal integer: "04"
 word: "x"
-structure member: "."
+structure member: "." 
+mod: "%"
 octal integer: "05"
-word: "x"
+word: "x" 
 structure member: "."
-assignment: "="
+mod equals: "%="
 octal integer: "06"
 word: "x"
 structure member: "."
-decimal integer: "08"
-word: "x"            
-structure member: "."
+mod: "%"
 decimal integer: "08"
 word: "x"
 structure member: "."
+mod: "%"
+decimal integer: "08"
+word: "x"
+structure member: "."
+mod: "%"
 division: "/"
 decimal integer: "09"
 word: "x"
 structure member: "."
-assignment: "="
+mod equals: "%="
 decimal integer: "08"
-word: "x"       
+word: "x"   
 
-22)
-"0X0x01789..."
+25)
+Input: "0X0x01789..."
+
+Output:
 hexadecimal integer: "0X0"
 word: "x01789"
 structure member: "."
 structure member: "."
 structure member: "."
 
-23)
-"[[def]))()que 0xbac"
+26)
+Input: "[[def]))()que 0xbac"
+
+Output:
 left bracket: "["
 left bracket: "["
 word: "def"
@@ -297,8 +331,10 @@ right parenthesis: ")"
 word: "que"
 hexadecimal integer: "0xbac"
 
-24)
-"sizeof(c) <= monkey[array]"
+27)
+Input: "sizeof(c) <= monkey[array]"
+
+Output:
 sizeof: "sizeof"
 left parenthesis: "("
 word: "c"
@@ -310,20 +346,25 @@ word: "array"
 right bracket: "]"
 
 
-25)
-"123.44333429873e+2a9923.33^C545e-17 30x0"
+28)
+Input: "123.44333429873e+2a9923.33^C545e-17 30x0"
+
+Output:
 floating point: "123.44333429873e+2"
 word: "a9923"
 structure member: "."
 decimal integer: "33"
 bitwise XOR: "^"
 word: "C545e"
-decimal integer: "-17"
+minus/subtract operator: "-"  
+decimal integer: "17"
 decimal integer: "30"
 word: "x0"
 
-26)
-"if case is while ^&"
+29)
+Input: "if case is while ^&"
+
+Output:
 C keyword: "if"
 C keyword: "case"
 word: "is"
@@ -331,8 +372,10 @@ C keyword: "while"
 bitwise XOR: "^"
 AND/address operator: "&"
 
-27)
-"afsgb #hdgdg 124.85 <=++++,.s53b%0xX0Xxeuy"
+30)
+Input: "afsgb #hdgdg 124.85 <=++++,.s53b%0xX0Xxeuy"
+
+Output:
 word: "afsgb"
 word: "hdgdg"
 floating point: "124.85"
@@ -346,8 +389,10 @@ mod: "%"
 octal integer: "0"
 word: "xX0Xxeuy"
 
-28)
-"trying \"quotes\" with # and \$mean\$okay"
+31)
+Input: "trying \"quotes\" with # and \$mean\$okay"
+
+Output:
 word: "trying"
 double quote: ""quotes""
 word: "with"
@@ -355,13 +400,225 @@ word: "and"
 word: "mean"
 word: "okay"
 
-29)
-"/*skipping this*/\\\"quote this"\"
-double quote: ""quote this""
+32)
+Input: "non tokens \$\$ #@ are skipped \!"
 
-30)"non tokens \$\$ #@ are skipped \!"
+Output:
 word: "non"
 word: "tokens"
 word: "are"
 word: "skipped"
 negate: "!"
+
+33)
+Input: "123.07 /*commennt*/ \'passed\' \"gotit yes\" 123abc567.097e-56b 079 0 0x 0xdest +++ <==!= "
+
+Output:
+floating point: "123.07"
+single quote: "'passed'"
+double quote: ""gotit yes""
+decimal integer: "123"
+word: "abc567"
+structure member: "."
+decimal integer: "097"
+word: "e"
+decimal integer: "-56"
+word: "b"
+decimal integer: "079"
+octal integer: "0"
+octal integer: "0"
+word: "x"
+hexadecimal integer: "0xde"
+word: "st"
+increment: "++"
+addition: "+"
+less than or equal test: "<="
+assignment: "="
+inequality test: "!="
+
+34)
+Input: "today is a \n \"good\" \t \'day\'"
+
+Output:
+word: "today"
+word: "is"
+word: "a"
+double quote: ""good""
+single quote: "'day'"
+
+35)
+"comments //go till new line \n done"
+
+word: "comments"
+word: "done"
+
+36)
+Input: "trying quotes with escapes \"\t\n\" \'\t\n\v\' /* \t\n*/ end"
+
+Output:
+word: "trying"
+word: "quotes"
+word: "with"
+word: "escapes"
+double quote: ""	
+""
+single quote: "'	
+
+'"
+word: "end"
+
+
+37)
+Input: "/*skipping this*/\\\"quote this"\"
+
+Output:
+double quote: ""quote this""
+
+38)
+Input: "dog23\rsizeofabc\fcat\t\"gdf\" \'cd\' //good\n /*dg*/ done\n12.e3,,,+++-=-=-- enum"
+
+Output:
+word: "dog23"
+word: "sizeofabc"
+word: "cat"
+double quote: ""gdf""
+single quote: "'cd'"
+word: "done"
+decimal integer: "12"
+structure member: "."
+word: "e3"
+comma: ","
+comma: ","
+comma: ","
+increment: "++"
+addition: "+"
+minus equals: "-="
+minus equals: "-="
+decrement: "--"
+C keyword: "enum"
+
+39) Input: "3429837498.37483923aBc123>>0x12345,,,++ testing some more reallylongstring.38438.4787lksjdcnskjfbdjskhfo874whfksjnfkjdkjy8e768347658%=[]*dhjd^^||0xFF0xGG9898 long input array[xyz] +=.543.6kjdfkjshdkfhkhs...dfs.df..d.fsd.f.sdf....dsf.d.fs.dfsdf...sdfs.dfsd.f...sdfsdfsdfsdf..sdfsdfsdf.sdfsdfsdfsdf.sdfsdfefsdf.sdfsdfsdfsd.sdfsdfsdfsdf.sdfsdfsdfsdf.sdfsdfsdfsdfsd.sdfsdfsdfsdf.sdfsdfsdfsdf.sdfsdfsdfsdfcsdf....sdfdsfsdf>>dfjks<234.6934789497538947985798...<<+oxFF12343123124123 abcjsjkjbef"
+
+Output:
+floating point: "3429837498.37483923"
+word: "aBc123"
+shift right: ">>"
+hexadecimal integer: "0x12345"
+comma: ","
+comma: ","
+comma: ","
+increment: "++"
+word: "testing"
+word: "some"
+word: "more"
+word: "reallylongstring"
+structure member: "." 
+floating point: "38438.4787"
+word: "lksjdcnskjfbdjskhfo874whfksjnfkjdkjy8e768347658"
+mod equals: "%="
+left bracket: "["
+right bracket: "]"
+multiply/dereference operator: "*"
+word: "dhjd"
+bitwise XOR: "^"
+bitwise XOR: "^"
+logical OR: "||"
+hexadecimal integer: "0xFF0"
+word: "xGG9898"
+C keyword: "long"
+word: "input"
+word: "array"
+left bracket: "["
+word: "xyz"
+right bracket: "]"
+plus equals: "+="
+structure member: "."
+floating point: "543.6"
+word: "kjdfkjshdkfhkhs"
+structure member: "."
+structure member: "."
+structure member: "."
+word: "dfs"
+structure member: "."
+word: "df"
+structure member: "."
+structure member: "."  
+word: "d"
+structure member: "."  
+word: "fsd"
+structure member: "."
+word: "f"            
+structure member: "."
+word: "sdf"
+structure member: "."
+structure member: "."
+structure member: "."
+structure member: "."
+word: "dsf"
+structure member: "."
+word: "d"
+structure member: "." 
+word: "fs"
+structure member: "." 
+word: "dfsdf" 
+structure member: "."
+structure member: "."
+structure member: "."
+word: "sdfs"
+structure member: "."
+word: "dfsd"
+structure member: "."
+word: "f" 
+structure member: "."
+structure member: "."
+structure member: "."
+word: "sdfsdfsdfsdf"
+structure member: "."
+structure member: "."
+word: "sdfsdfsdf"
+structure member: "." 
+word: "sdfsdfsdfsdf" 
+structure member: "."
+word: "sdfsdfefsdf"
+structure member: "."
+word: "sdfsdfsdfsd" 
+structure member: "." 
+word: "sdfsdfsdfsdf"
+structure member: "."
+word: "sdfsdfsdfsdf" 
+structure member: "."
+word: "sdfsdfsdfsdfsd" 
+structure member: "."
+word: "sdfsdfsdfsdf" 
+structure member: "." 
+word: "sdfsdfsdfsdf"
+structure member: "." 
+word: "sdfsdfsdfsdfcsdf" 
+structure member: "."
+structure member: "." 
+structure member: "."
+structure member: "."
+word: "sdfdsfsdf"
+shift right: ">>" 
+word: "dfjks"
+less than test: "<"
+floating point: "234.6934789497538947985798."
+structure member: "." 
+structure member: "."
+shift left: "<<" 
+addition: "+"
+word: "oxFF12343123124123"
+word: "abcjsjkjbef"  
+
+40) Input: "words123.54.77/j*"    
+
+Output:
+word: "words123" 
+structure member: "."
+floating point: "54.77"
+division: "/"
+word: "j"
+multiply/dereference operator: "*"
+
+
+
