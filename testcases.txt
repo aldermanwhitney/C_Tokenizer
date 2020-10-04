@@ -1,0 +1,177 @@
+Input String followed by Output:
+
+1)
+"happy rt56 34.06e-10 5.67e12 0 97 765 0x 0xfegh"
+word: "happy"
+word: "rt56"
+floating point: "34.06e-10"
+floating point: "5.67e12"
+octal integer: "0"
+decimal integer: "97"
+decimal integer: "765"
+octal integer: "0"
+word: "x"
+hexadecimal integer: "0xfe"
+word: "gh"
+
+
+2)
+"abc123.97 abc0Xabfstring df076 ran*dom"
+word: "abc123"
+structure member: "."
+decimal integer: "97"
+word: "abc0Xabfstring"
+word: "df076"
+word: "ran"
+multiply/dereference operator: "*"
+word: "dom"
+
+3)
+"970x45ef 012 0.124 012.45 3^5"
+decimal integer: "970"
+word: "x45ef"
+octal integer: "012"
+floating point: "0.124"
+floating point: "012.45"
+decimal integer: "3"
+bitwise XOR: "^"
+decimal integer: "5"
+
+4)
+"123.07 /*commennt*/ \'passed\' \"gotit yes\" 123abc567.097e-56b 079 0 0x 0xdest +++ <==!= "
+floating point: "123.07"
+single quote: "'passed'"
+double quote: ""gotit yes""
+decimal integer: "123"
+word: "abc567"
+structure member: "."
+decimal integer: "097"
+word: "e"
+decimal integer: "-56"
+word: "b"
+decimal integer: "079"
+octal integer: "0"
+octal integer: "0"
+word: "x"
+hexadecimal integer: "0xde"
+word: "st"
+increment: "++"
+addition: "+"
+less than or equal test: "<="
+assignment: "="
+inequality test: "!="
+
+5)
+"0xabcdef12.76e^-70x^-="
+hexadecimal integer: "0xabcdef12"
+structure member: "."
+decimal integer: "76"
+word: "e"
+bitwise XOR: "^"
+decimal integer: "-70"
+word: "x"
+bitwise XOR: "^"
+minus equals: "-="
+
+6)
+"076 076.05 76"
+octal integer: "076"
+floating point: "076.05"
+decimal integer: "76"
+
+7)
+"34.45 34.45e-10 34.45e23 34.45e+9 34.e"
+floating point: "34.45"
+floating point: "34.45e-10"
+floating point: "34.45e23"
+floating point: "34.45e+9"
+decimal integer: "34"
+structure member: "."
+word: "e"
+
+8)
+".23 45. 0.23 45.0"
+structure member: "."
+decimal integer: "23"
+decimal integer: "45"
+structure member: "."
+floating point: "0.23"
+floating point: "45.0"
+
+9)
+"today is a //good day"
+word: "today"
+word: "is"
+word: "a"
+
+10)
+"today is a /*good day*/ okay"
+word: "today"
+word: "is"
+word: "a"
+word: "okay"
+
+11)
+"today is a \n \"good\" \t \'day\'"
+word: "today"
+word: "is"
+word: "a"
+double quote: ""good""
+single quote: "'day'"
+
+12)
+"rest45 int enum float CKeywords"
+word: "rest45"
+C keyword: "int"
+C keyword: "enum"
+C keyword: "float"
+word: "CKeywords"
+
+13)
+"comments //go till new line \n done"
+word: "comments"
+word: "done"
+
+14)
+"sizeofabcd abcdsizeof"
+word: "sizeofabcd"
+word: "abcdsizeof"
+
+15)
+"trying quotes with escapes \"\t\n\" \'\t\n\v\' /* \t\n*/ end"
+word: "trying"
+word: "quotes"
+word: "with"
+word: "escapes"
+double quote: ""	
+""
+single quote: "'	
+
+'"
+word: "end"
+
+16)
+"dog23\rsizeofabc\fcat\t\"gdf\" \'cd\' //good\n /*dg*/ done\n12.e3,,,+++-=-=-- enum"
+word: "dog23"
+word: "sizeofabc"
+word: "cat"
+double quote: ""gdf""
+single quote: "'cd'"
+word: "done"
+decimal integer: "12"
+structure member: "."
+word: "e3"
+comma: ","
+comma: ","
+comma: ","
+increment: "++"
+addition: "+"
+minus equals: "-="
+minus equals: "-="
+decrement: "--"
+C keyword: "enum"
+
+17)
+""
+Empty string input, no tokens
+

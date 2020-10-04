@@ -36,6 +36,7 @@ char *token_string;
 enum token_type token_type;
 char *optional_c_operator_type;
 struct Token *next;
+int alreadyPrinted;
 };
 struct Token* head = NULL;
 
@@ -67,6 +68,7 @@ struct Token* createToken(char *token_string, enum token_type tt){
 struct Token *token = malloc(sizeof(struct Token));
 token->token_string = token_string;
 token->token_type = tt;
+ token->alreadyPrinted=0;
 return token;
 }
 
@@ -227,7 +229,7 @@ int e = 0;
 
 		  //if character is not a decimal and not an integer
 		  //then it is allowed to be e or E and also allowed to be + or - if occurring right after e/E
-		  if(e==0 && decimalPosition!=(i-1) && decimal_count==1 && (string[i]==69 || string[i]==101)){
+		  if (e==0 && decimalPosition!=(i-1) && decimal_count==1 && (string[i]==69 || string[i]==101)){
                   e=i;
 		  i++;
 		  continue;
@@ -291,7 +293,7 @@ while (string[i]!='\0'){
       t=1;
       
     }
-    else if(e==0 && t==1 && (string[i]==69 || string[i]==101)){
+    else if( e==0 && t==1 && (string[i]==69 || string[i]==101)){
       e=i;
       // printf("found e");
       //      continue;
@@ -427,7 +429,10 @@ switch(string[i]) {
 	case '*':
 		c_op = "multiply/dereference operator";
 		return c_op;
-	default:
+        case '%':
+                c_op="mod";
+                return c_op;
+        default:
 		//c_operator_struct->operator_length=0;
 		return c_op;
 		//return c_operator_struct;
@@ -650,7 +655,7 @@ result[j] = string[i];
 j++;	
 }
 
-printf("Substring: %s\n", result);
+//printf("Substring: %s\n", result);
 return result;
 }
 
@@ -793,6 +798,23 @@ int skipComments(char* string, int c1, int c2, char slash, char slash_or_star){
   return end;
 }
 
+
+/*This function determines if the current substring
+is a non recognizable token. 
+Returns 0 if not a token, returns 1 if possibly could be a token*/
+int Not_A_Token(char* string){
+  // char* string;
+  // string[0]=c;
+  if(isWord(string) || isCKeyword(string) || isInt(string) || isFloat(string) || isHex(string) || isOctal(string) || strlen(isC_Operator(string))!=0 ){
+    puts("is some token");
+    return 1;
+  }
+  puts("is not some token");
+  return 0;
+}
+
+
+
 int main(int argc, char** argv){
 
 if (argc!=2){
@@ -808,9 +830,13 @@ strncpy(inputString, argv[1], size_input_string+1);
 /////
 
 ////////TO TEST DIFFERENT INPUTSTRINGS, UNCOMMENT THIS SINGLE LINE WITH YOUR INPUT
-// char inputString[] = "123.07 /*commennt*/ \'passed \' \"gotit yes\" 123abc567.097e-56b 079 0 0x 0xdest +++ <==!= ";
+// char inputString[] = "dog23\rsizeof\"gdf\" %= ()[]";
 ///////
 
+ if(strlen(inputString)==0){
+   puts("Empty string input, no tokens");
+   return 0;
+ }
 
 //i iterates through input string char by char
 //beginIndex is the beginning of the current substring we are examing 
@@ -822,9 +848,16 @@ char* currentstring;
 //currentstring = createSubstring(inputString, beginSubstringIndex, i);
  int quote_present = 0;
 while(inputString[i]!='\0'){
-
+  //struct Token* oldhead = head;
   //check for comments and function call to skip them
   if((inputString[i]=='/' && inputString[i+1]=='*') || (inputString[i]=='/' && inputString[i+1]=='/')){
+    if(head!=NULL) {
+      if(head->alreadyPrinted==0){
+        printToken(head);
+        head->alreadyPrinted=1;
+      }
+    }
+    
     beginSubstringIndex = skipComments(inputString, i, i+1, inputString[i], inputString[i+1]);
     i = beginSubstringIndex;
     if(i==-1) {
@@ -839,19 +872,27 @@ while(inputString[i]!='\0'){
   if((inputString[i]=='\"' || inputString[i]=='\'')){ 
     if(quote_present%2==0){
     //must print previous token before updating
-      puts("printing oldhead before quotes token");
-    printToken(head);	
+      //      puts("printing oldhead before quotes token");
+
+
+      if(head!=NULL){
+	if(head->alreadyPrinted==0){
+	printToken(head);
+	head->alreadyPrinted=1;
+      }
+      }
     beginSubstringIndex = getTokenInQuotes(inputString, i, inputString[i]);
     i = beginSubstringIndex;
 
     //print quote token
     printToken(head);
-     puts("quotes detected");
+    head->alreadyPrinted=1;
+    // puts("quotes detected");
 
     //need to skip over rest of code, where it checks oldhead etc
-    i++;
+     //    i++;
     quote_present++;
-    printf("value of quotes: %d\n", quote_present);
+    //printf("value of quotes: %d\n", quote_present);
     continue;
     }
     else{
@@ -869,10 +910,8 @@ while(inputString[i]!='\0'){
   continue;
   }
 
-
-
 //save old head pointer
- struct Token* oldhead = head;
+struct Token* oldhead = head;
 
 //Searches for any possible tokens for current substring
 //and adds these tokens to a linked list and updates head
@@ -892,65 +931,103 @@ head = add_viable_tokens_to_linkedlist(currentstring);
 //2 - The largest token is the previously found token
 
 if (oldhead==head){
-puts("reached untokenizeable token");
+  //puts("reached untokenizeable token");
 
 //Case 1 Check - Next token may qualify
 
 //Check for case 1 - float
 if (isPossibleFloat(currentstring) && (inputString[i+1]!='\0')){
-puts("can possibly be float - checking next index..");
+  //puts("can possibly be float - checking next index..");
 
 char *possible_float = malloc(sizeof(char)*(i-beginSubstringIndex+2));
 possible_float = createSubstring(inputString, beginSubstringIndex, i+1);
 
 if (isFloat(possible_float)){
-puts("next token will be float, continue iterations as normal");
+  //puts("next token will be float, continue iterations as normal");
 i++;
 free(possible_float);
 continue;
 }
 else{
-puts("next value will not be a float");
+  //puts("next value will not be a float");
 }
 free(possible_float);
 }
 
 //Check for case 1 - hex
 if (isPossibleHex(currentstring) && (inputString[i+1]!='\0')){
-puts("can possibly be hex - checking next index..");
+  //puts("can possibly be hex - checking next index..");
 
 char *possible_hex = malloc(sizeof(char)*(i-beginSubstringIndex+2));
 possible_hex = createSubstring(inputString, beginSubstringIndex, i+1);
 
 if (isHex(possible_hex)){
-puts("next token will be hex, continue iterations as normal");
+  //puts("next token will be hex, continue iterations as normal");
 i++;
 free(possible_hex);
 continue;
 }
 else{
-puts("next token will not be hex");
+  //puts("next token will not be hex");
 }
 free(possible_hex);
 }
 
 //Case 2 - Tokenize previous token
-puts("Reached a non token, tokenizing previous token");
-printToken(head);
+//puts("Reached a non token, tokenizing previous token");
 
+/* if(Not_A_Token(currentstring)==0){
+   printf("%s is not a recognizable token\n", currentstring);
+   i++;
+   continue;
+   }*/
+
+//printToken(head);
+
+/* if(Not_A_Token(currentstring)==0){
+   printf("%s is not a recognizable token\n", currentstring);
+   i++;
+   beginSubstringIndex=i;
+   continue;
+   }*/
+ if(head!=NULL){
+ if(head->alreadyPrinted==0){
+ printToken(head);
+ head->alreadyPrinted=1;
+ }
+ }
+
+ /* if(Not_A_Token(currentstring[i])==0){
+   printf("%s is not a recognizable token\n", currentstring);
+   i++;
+   beginSubstringIndex=i;
+   continue;
+   }*/
 //resets begin substring pointer to first char after the token
 beginSubstringIndex=i;
 continue;
 }
+
+/* if(Not_A_Token(currentstring)==0){
+   printf("%s is not a recognizable token\n", currentstring);
+   i++;
+   beginSubstringIndex=i;
+   continue;
+   }*/
 
 
 i++;
 }
 
 
- puts("printing last head");
-printToken(head);
+// puts("printing last head");
 
+ if(head!=NULL){
+   if(head->alreadyPrinted==0){
+   printToken(head);
+   head->alreadyPrinted=1;
+   }
+ }
 
 //free(inputString);
 free(currentstring);
