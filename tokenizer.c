@@ -802,7 +802,7 @@ int skipComments(char* string, int c1, int c2, char slash, char slash_or_star){
 /*This function determines if the current substring
 is a non recognizable token. 
 Returns 0 if not a token, returns 1 if possibly could be a token*/
-int Not_A_Token(char* string){
+/*int Not_A_Token(char* string){
   // char* string;
   // string[0]=c;
   if(isWord(string) || isCKeyword(string) || isInt(string) || isFloat(string) || isHex(string) || isOctal(string) || strlen(isC_Operator(string))!=0 ){
@@ -811,9 +811,23 @@ int Not_A_Token(char* string){
   }
   puts("is not some token");
   return 0;
+}*/
+
+int Invalid_Token(char c, int substring_index, char* input){
+  char* currentItem;
+  currentItem = createSubstring(input, substring_index, substring_index);
+  if(strlen(currentItem)!=1 || currentItem[0]!=c){
+    // puts("not working");
+  }
+  //  printf("current charcter, %s \n", currentItem);
+  char* str = isC_Operator(currentItem);
+  if(isWord(currentItem) || isCKeyword(currentItem) || isInt(currentItem) || isFloat(currentItem) || isHex(currentItem) || isOctal(currentItem) || strlen(str)!=0 ){
+    //    puts("found type");
+    return 1;
+  }
+  //  puts("found invalid token");
+  return 0;
 }
-
-
 
 int main(int argc, char** argv){
 
@@ -899,7 +913,15 @@ while(inputString[i]!='\0'){
       quote_present++;
     }
   }
-  
+
+  /*  if(Invalid_Token(inputString[i], i,inputString)==(i+1)){
+
+    printf("non token index at %d\n", i);
+    i++;
+    beginSubstringIndex++;
+    printf("restart at %d\n", i);        
+    continue;
+  }*/
   
  currentstring = createSubstring(inputString, beginSubstringIndex, i);
  
@@ -910,6 +932,22 @@ while(inputString[i]!='\0'){
   continue;
   }
 
+    if(Invalid_Token(inputString[i], i,inputString)==0){
+      if(head!=NULL){
+        if(head->alreadyPrinted==0){
+        printToken(head);
+        head->alreadyPrinted=1;
+      }
+      }
+      // printf("non token index at %d\n", i);
+    beginSubstringIndex=i+1;
+    i+=1;
+    //printf("restart at %d\n", i);
+    continue;
+    }
+
+    // printf(" i is at %d\n", i);
+    // printf("bs is at %d\n", beginSubstringIndex);
 //save old head pointer
 struct Token* oldhead = head;
 
