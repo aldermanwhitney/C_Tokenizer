@@ -650,7 +650,7 @@ result[j] = string[i];
 j++;	
 }
 
-//printf("Substring: %s\n", result);
+printf("Substring: %s\n", result);
 return result;
 }
 
